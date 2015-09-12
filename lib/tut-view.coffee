@@ -1,3 +1,4 @@
+{$, $$, $$$, View, TextEditorView} = require 'atom-space-pen-views'
 CodeBlock = require './content/code-block'
 codeBlock = new CodeBlock()
 
@@ -7,7 +8,7 @@ markdown = new MarkdownEditor()
 project = require './data/project'
 
 module.exports =
-class TutView
+class TutView extends View
   constructor: (serializedState) ->
     # Create root element
     @element = document.createElement('div')
@@ -16,14 +17,6 @@ class TutView
     # Nav
     header = '<div class="tut--header">Tutorial Builder: ' + project.title + '</div>'
 
-    # Markdown Text
-    # TODO: move into markdown file
-    above = '<div class="tut--text-above">' +
-        'A text area above' +
-      '</div>'
-    below = '<div class="tut--text-above">' +
-        'A text area above' +
-      '</div>'
 
     # Create content
     content = document.createElement('div')
