@@ -7,6 +7,9 @@ module.exports = Tut =
   subscriptions: null
 
   activate: (state) ->
+
+    console.log state # object
+
     @tutView = new TutView(state.tutViewState)
     @modalPanel = atom.workspace.addRightPanel(item: @tutView.getElement(), priority: 100)
 
@@ -30,5 +33,5 @@ module.exports = Tut =
     if @modalPanel.isVisible()
       @modalPanel.hide()
     else
-
+      #atom.commands.dispatch(atom.views.getView(atom.workspace), "git-plus:diff");
       @modalPanel.show()

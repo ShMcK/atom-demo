@@ -1,14 +1,10 @@
-{$, $$, $$$, View, TextEditorView} = require 'atom-space-pen-views'
-CodeBlock = require './content/code-block'
-codeBlock = new CodeBlock()
-
-MarkdownEditor = require './content/markdown'
-markdown = new MarkdownEditor()
-
+codeBlock = require './content/code-block'
+markdown = require './content/markdown'
 project = require './data/project'
+$ = jQuery = require 'jquery'
 
 module.exports =
-class TutView extends View
+class TutView
   constructor: (serializedState) ->
     # Create root element
     @element = document.createElement('div')
@@ -17,11 +13,13 @@ class TutView extends View
     # Nav
     header = '<div class="tut--header">Tutorial Builder: ' + project.title + '</div>'
 
+    button = '<button class="tut--submit">Submit</button>'
 
     # Create content
     content = document.createElement('div')
     content.classList.add('tut--view')
     content.innerHTML = header +
+        button +
         # TODO: chapter / step
         markdown.getAbove() +
         codeBlock.getFromEditor() +
@@ -29,12 +27,20 @@ class TutView extends View
 
     @element.appendChild(content)
 
-  # Returns an object that can be retrieved when package is activated
-  serialize: ->
 
-  # Tear down any state and detach
+
+  submit: ->
+    alert 'submit!'
+#
+#   # Returns an object that can be retrieved when package is activated
+  serialize: ->
+#
+#   # Tear down any state and detach
   destroy: ->
     @element.remove()
 
   getElement: ->
     @element
+
+$("tut .tut--submit").click ->
+  alert "User clicked on 'foo.'"

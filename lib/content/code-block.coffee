@@ -18,4 +18,4 @@ class CodeBlock
 
     return wrappedCode
 
-module.exports = CodeBlock
+module.exports = new CodeBlock()

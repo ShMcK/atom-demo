@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "highlights": "1.2.0",
-    "atom-space-pen-views": "2.1.0",
-    "nodegit": "0.4.1"
+    "nodegit": "0.4.1",
+    "jquery": "^2.1.4"
   }
 }
