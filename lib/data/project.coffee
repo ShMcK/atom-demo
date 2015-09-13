@@ -23,20 +23,22 @@ class Project
 
   updateCurrent: (step, chapter) ->
     @current.step = step
-    @current.chapter = chapter || @model.current.chapter
+    @current.chapter = chapter || @current.chapter
 
   ###
   #   Step
   ###
 
   addStep: ->
-    @data.chapters[@current.chapter].steps.push(defaultStep)
+    @data.chapters[@current.chapter].steps[@current.step + 1] = defaultStep
+    console.log 'step added', @data
 
   saveStep: (step) ->
     @data.chapters[@current.chapter].steps[@current.step] = step
-    console.log @data
+    console.log 'step saved', @data
 
   loadStep: () ->
+    console.log 'step loaded', @current
     return @data.chapters[@current.chapter].steps[@current.step]
 
   ###
@@ -44,4 +46,5 @@ class Project
   ###
 
   addChapter: ->
-    @data.chapters.push(steps.push(defaultStep))
+    @data.chapters.push(steps = [defaultStep])
+    console.log 'chapter added', @data

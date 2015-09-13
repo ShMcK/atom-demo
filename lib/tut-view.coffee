@@ -28,9 +28,9 @@ class FormView extends ScrollView
       @div class: 'tut--current', =>
         @p =>
           @tag 'span', 'Ch: '
-          @tag 'span', class: 'text-success', project.current.chapter + 1
+          @tag 'span', class: 'text-success tut--chapter', project.current.chapter + 1
           @tag 'span', '  Step: '
-          @tag 'span', class: 'text-success', project.current.step + 1
+          @tag 'span', class: 'text-success tut--step', project.current.step + 1
 
       @div class: 'tut--text-box', =>
         @subview 'textAboveEditor', new TextEditorView(editor: @textAboveEditor)
@@ -43,8 +43,10 @@ class FormView extends ScrollView
         @subview 'textBelowEditor', new TextEditorView(editor: @textBelowEditor)
 
       @div class: 'tut--options', =>
-        @button class: 'btn btn-default', click: 'stepPrev', 'Above'
-        @button class: 'btn btn-default', click: 'stepAdd', 'Below'
+        @button class: 'btn btn-default', click: 'stepPrev', 'Prev'
+        @button class: 'btn btn-default', click: 'stepNext', 'Next'
+      @div class: 'tut--options', =>
+        @button class: 'btn btn-default', click: 'stepAdd', 'Add Step'
         @button class: 'btn btn-default', click: 'chapterAdd', 'Add Chapter'
       @button class: 'btn btn-primary', click: 'save', 'save'
 
@@ -60,10 +62,14 @@ class FormView extends ScrollView
 
 
   loadStep: () ->
+    $('.tut--chapter').text(@model.current.chapter + 1)
+    $('.tut--step').text(@model.current.step + 1) 
+
     @currentStep = @model.loadStep()
     @textAboveEditor.setText @currentStep.above
     @textBelowEditor.setText @currentStep.below
     codeBlock.setCode @currentStep.code
+
 
   save: ->
     # TODO: automate save
@@ -80,10 +86,12 @@ class FormView extends ScrollView
   stepNext: ->
     step = @model.current.step
     chapter = @model.current.chapter
-    if step < @model.data.chapters[chapter].steps.length
+    if step < @model.data.chapters[chapter].steps.length - 1
+      console.log 'next step'
       @model.updateCurrent(step + 1)
       @loadStep()
-    else if chapter < @model.data.chapters.length
+    else if chapter < @model.data.chapters.length - 1
+      console.log 'next chapter'
       @model.updateCurrent(0, chapter + 1)
       @loadStep()
     else
@@ -94,9 +102,11 @@ class FormView extends ScrollView
     step = @model.current.step
     chapter = @model.current.chapter
     if step > 0
-      @model.updateCurrent(step -1)
+      console.log 'prev step'
+      @model.updateCurrent(step - 1)
       @loadStep()
     else if chapter > 0
+      console.log 'prev chapter'
       prevChapterFinalStep = @model.data.chapters[chapter - 1].steps.length
       @model.updateCurrent(prevChapterFinalStep, chapter - 1)
       @loadStep()
