@@ -17,19 +17,31 @@ class Project
         ]
       ]
 
-  loadStep: () ->
-    return @data.chapters[@current.chapter - 1].steps[@current.step - 1]
-
-  save: (step) ->
-    @data.chapters[@current.chapter - 1].steps[@current.step - 1] = step
-    console.log @data
+  ###
+  #   Current step/chapter
+  ###
 
   updateCurrent: (step, chapter) ->
     @current.step = step
-    @current.chapter = chapter
+    @current.chapter = chapter || @model.current.chapter
+
+  ###
+  #   Step
+  ###
 
   addStep: ->
     @data.chapters[@current.chapter - 1].steps.push(defaultStep)
+
+  saveStep: (step) ->
+    @data.chapters[@current.chapter - 1].steps[@current.step - 1] = step
+    console.log @data
+
+  loadStep: () ->
+    return @data.chapters[@current.chapter - 1].steps[@current.step - 1]
+
+  ###
+  #   Chapter
+  ###
 
   addChapter: ->
     @data.chapters.push(steps.push(defaultStep))

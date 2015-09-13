@@ -56,13 +56,14 @@ class FormView extends ScrollView
     super
     @subscriptions = new CompositeDisposable
     @model = model
-    @currentStep = @model.loadStep()
-    @loadViewData(@currentStep)
+    @loadStep()
 
-  loadViewData: (step) ->
-    @textAboveEditor.setText step.above
-    @textBelowEditor.setText step.below
-    codeBlock.setCode step.code
+
+  loadStep: () ->
+    @currentStep = @model.loadStep()
+    @textAboveEditor.setText @currentStep.above
+    @textBelowEditor.setText @currentStep.below
+    codeBlock.setCode @currentStep.code
 
   save: ->
     # TODO: automate save
@@ -70,22 +71,45 @@ class FormView extends ScrollView
       above: @textAboveEditor.getText()
       below: @textBelowEditor.getText()
       code: codeBlock.code
-    @model.save(@currentStep)
+    @model.saveStep(@currentStep)
 
   ###
-  #  Change project
+  #  Navigation
   ###
 
   stepNext: ->
-    console.log @textAboveEditor.getText()
+    step = @model.current.step
+    if step < @model.data.chapters[@model.current.chapter - 1].steps.length
+      @model.updateCurrent(@model.current.step + 1)
+      @loadStep()
+    else if @model.current.chapter < @model.data.chapters.length
+      @model.updateCurrent(1, @model.current.chapter + 1)
+      @loadStep()
+    else
+      console.log 'no next step'
+
 
   stepPrev: ->
-    console.log @textAboveEditor.getText()
+    step = @model.current.step
+    if step >= 1
+      @model.updateCurrent(step -1)
+      @loadStep()
+    else
+      console.log 'no earlier step'
+
+  ###
+  #  Add
+  ###
 
   stepAdd: ->
     # console.log @textAboveEditor.getModel()
     console.log @textAboveEditor.getText()
+    @model.addStep()
     @stepNext()
 
   chapterAdd: ->
+    @model.addChapter()
+    @model.updateCurrent(1, @model.current.chapter + 1)
+
+
     alert 'add chapter'
