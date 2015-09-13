@@ -32,15 +32,15 @@ class FormView extends ScrollView
           @tag 'span', "  Step: "
           @tag 'span', class: 'text-success', project.current.step
 
-# class: 'tut--text-above',
-      @subview 'textAboveEditor', new TextEditorView(editor: @textAboveEditor)
-        #  @subview 'textAboveEditor', new TextEditorView(editor: @textAboveEditor)
+      @div class: 'tut--text-box', =>
+        @subview 'textAboveEditor', new TextEditorView(editor: @textAboveEditor)
 
       # code-block
       # TODO: move into TextEditorView, load dynamically, clickable
       @raw codeBlock.getFromEditor()
 
-      @subview 'textBelowEditor', new TextEditorView(editor: @textBelowEditor)
+      @div class: 'tut--text-box', =>
+        @subview 'textBelowEditor', new TextEditorView(editor: @textBelowEditor)
 
       @div class: 'tut--options', =>
         @button class: 'btn btn-default', click: "stepPrev", "Above"
