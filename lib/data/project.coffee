@@ -1,3 +1,3 @@
 module.exports =
 class Project
-  constructor: (@title = 'Untitled', @description = null, @keywords = []) ->
+  constructor: (@title = 'Untitled', @current = {chapter: 1, step: 1}, @description = null, @keywords = []) ->

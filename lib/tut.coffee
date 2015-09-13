@@ -15,7 +15,15 @@ module.exports = Tut =
     Git.init()
 
     # console.log state # object
-    project = new Project('Untitled', 'some description', ['test', 'test2'])
+    projectInit =
+        title: 'Untitled'
+        description: 'some description'
+        current:
+          chapter: 1
+          step: 1
+        keywords: ['test', 'test2']
+        
+    project = new Project(projectInit)
     @tutView = new TutView(project) #state.tutViewState
     @panel = atom.workspace.addRightPanel(item: @tutView, priority: 100)
 

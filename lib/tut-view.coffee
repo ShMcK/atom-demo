@@ -8,10 +8,13 @@ module.exports =
 class FormView extends ScrollView
 
   @content: (project) ->
+    console.log project
 
     @div class: 'tut', =>
       @div class: 'tut--header', =>
         @p "Tutorial Builder: " + project.title
+      @div class: 'tut--current', =>
+        @p "Ch: " + project.current.chapter + ", Step: " + project.current.step
 
       @div class: 'tut--text-above', =>
          @subview 'textAboveEditor', new TextEditorView(editor: @textAboveEditor)
@@ -24,9 +27,9 @@ class FormView extends ScrollView
         @subview 'textBelowEditor', new TextEditorView(editor: @textBelowEditor)
 
       @div class: 'tut--options', =>
-        @button click: "stepPrev", "Previous"
-        @button click: 'stepAdd', 'Add Step'
-        @button click: 'chapterAdd', 'Add Chapter'
+        @button class: 'btn btn-default', click: "stepPrev", "Previous"
+        @button class: 'btn btn-default', click: 'stepAdd', 'Add Step'
+        @button class: 'btn btn-default', click: 'chapterAdd', 'Add Chapter'
 
   ###
   #  Initialize
@@ -63,6 +66,6 @@ class FormView extends ScrollView
   ###
 
   stepAdd: ->
-    alert @textAboveEditor.getText()
+    console.log atom.workspace.getTextEditors()
   chapterAdd: ->
     alert 'add chapter'
