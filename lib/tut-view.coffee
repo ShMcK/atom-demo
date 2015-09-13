@@ -7,44 +7,55 @@ project = require './data/project'
 
 module.exports =
 class FormView extends ScrollView
+
   @content: (params) ->
-
-    textAboveEditor = new TextEditor
-      mini: true
-      tabLength: 2
-      softTabs: true
-      softWrapped: false
-      placeholderText: 'Text above'
-
-    textBelowEditor = new TextEditor
-      mini: true
-      tabLength: 2
-      softTabs: true
-      softWrapped: false
-      placeholderText: 'Text below'
 
     @div class: 'tut', =>
       @div class: 'tut--header', =>
         @p "Tutorial Builder: Untitled"
 
-      @nav class: 'tut--nav', =>
-        @ul =>
-          @li class: 'tut--nav--prev', =>
-           @a href: '#', click: "stepPrev", "<"
-          @li class: 'tut--nav--next', =>
-            @a href: '#', click: "stepNext", ">"
-
       @div class: 'tut--text-above', =>
-         @subview 'textAboveEditor', new TextEditorView(editor: textAboveEditor)
+         @subview 'textAboveEditor', new TextEditorView(editor: @textAboveEditor)
+
+      # code-block
+      # TODO: move into TextEditorView, load dynamically, clickable
       @raw codeBlock.getFromEditor()
+
       @div class: 'tut--text-below', =>
-        @subview 'textBelowEditor', new TextEditorView(editor: textBelowEditor)
+        @subview 'textBelowEditor', new TextEditorView(editor: @textBelowEditor)
+
+      @div class: 'tut--options', =>
+        @button click: "stepPrev", "Previous"
+        @button click: 'stepAdd', 'Add Step'
+        @button click: 'chapterAdd', 'Add Chapter'
 
   initialize: ->
+    super
     @subscriptions = new CompositeDisposable
+
+    @textAboveEditor = new TextEditor
+      tabLength: 2
+      softTabs: true
+      softWrapped: true
+      placeholderText: 'Text above'
+
+    @textBelowEditor = new TextEditor
+      tabLength: 2
+      softTabs: true
+      softWrapped: true
+      placeholderText: 'Text below'
+
+    @textAboveEditor.setText 'Hello'
     console.log 'initialized'
 
+  # Nav
   stepPrev: ->
       alert 'prev'
   stepNext: ->
       alert 'next'
+
+  # Project
+  stepAdd: ->
+    alert @textAboveEditor.getText()
+  chapterAdd: ->
+    alert 'add chapter'

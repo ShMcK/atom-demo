@@ -4,14 +4,24 @@ highlighter = new Highlights()
 
 class CodeBlock
   getFromEditor: ->
-    editor = atom.workspace.getActiveTextEditor()
-    code = editor.getText()
-    highlightedCode = highlighter.highlightSync
-      fileContents: code
-      scopeName: 'source.coffee'
+    # TODO: change to git diff from previous commit
+    # editor = atom.workspace.getActiveTextEditor()
+    # code = editor.getText()
+
+    code = '@i = 0\n
+    func: ->\n
+      console.log "test"'
 
     #TODO: detect langauge type, "source.js", "source.coffee", etc.
-    wrappedCode = '<div class="tut--code-block"><pre><code>' + highlightedCode + '</code></pre></div>'
-    return wrappedCode
+
+    return '<div class="tut--code-block"><pre><code>' +
+      @highlightCode(code, "coffee") +
+    '</code></pre></div>'
+
+  highlightCode: (code, fileType) ->
+    console.log fileType
+    return highlighter.highlightSync
+      fileContents: code
+      scopeName: 'source.' + fileType
 
 module.exports = new CodeBlock()

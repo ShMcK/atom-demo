@@ -1,5 +1,6 @@
 # TutView = require './tut-view'
 TutView = require './tut-view'
+Git = require './content/git'
 {CompositeDisposable} = require 'atom'
 
 module.exports = Tut =
@@ -10,7 +11,9 @@ module.exports = Tut =
 
   activate: (state) ->
 
-    console.log state # object
+    Git.init()
+
+    # console.log state # object
 
     @tutView = new TutView() #state.tutViewState
     @panel = atom.workspace.addRightPanel(item: @tutView, priority: 100)
