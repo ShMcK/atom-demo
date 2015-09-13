@@ -4,7 +4,7 @@ highlighter = new Highlights()
 
 class CodeBlock
   constructor: ->
-    @code = '@i = 0\n func: ->\n console.log "test"'
+    @code = '';
 
   getFromEditor: ->
     # TODO: change to git diff from previous commit
@@ -21,5 +21,8 @@ class CodeBlock
     return highlighter.highlightSync
       fileContents: code
       scopeName: 'source.' + fileType
+
+  setCode: (code) ->
+    @code = code;
 
 module.exports = new CodeBlock()

@@ -55,16 +55,14 @@ class FormView extends ScrollView
   initialize: (model) ->
     super
     @subscriptions = new CompositeDisposable
-    @data = model.data
-    @current = model.current
-    console.log @current
-    console.log @data
-    @currentStep = @data.chapters[@current.chapter - 1].steps[@current.step - 1]
+    @model = model
+    @currentStep = @model.loadStep()
+    @loadViewData(@currentStep)
 
-    # Init values
-    @textAboveEditor.setText(@currentStep.above);
-    @textBelowEditor.setText(@currentStep.below);
-
+  loadViewData: (step) ->
+    @textAboveEditor.setText step.above
+    @textBelowEditor.setText step.below
+    codeBlock.setCode step.code
 
   save: ->
     # TODO: automate save
@@ -72,23 +70,22 @@ class FormView extends ScrollView
       above: @textAboveEditor.getText()
       below: @textBelowEditor.getText()
       code: codeBlock.code
-    console.log @currentStep
-
-  ###
-  #  Nav Project
-  ###
-
-  # Nav
-  stepPrev: ->
-    console.log @textAboveEditor.getText()
+    @model.save(@currentStep)
 
   ###
   #  Change project
   ###
 
+  stepNext: ->
+    console.log @textAboveEditor.getText()
+
+  stepPrev: ->
+    console.log @textAboveEditor.getText()
+
   stepAdd: ->
     # console.log @textAboveEditor.getModel()
     console.log @textAboveEditor.getText()
+    @stepNext()
 
   chapterAdd: ->
     alert 'add chapter'
