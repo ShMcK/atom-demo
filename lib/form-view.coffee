@@ -1,6 +1,10 @@
 {$$$, View, TextEditorView} = require 'atom-space-pen-views'
 {CompositeDisposable, TextEditor} = require 'atom'
 
+codeBlock = require './content/code-block'
+markdown = require './content/markdown'
+project = require './data/project'
+
 module.exports =
 class FormView extends View
   @content: (params) ->
@@ -25,15 +29,13 @@ class FormView extends View
       @button click: 'openAlert', 'Submit'
       @div class: 'tut--text-above', =>
          @subview 'textAboveEditor', new TextEditorView(editor: textAboveEditor)
-      @div class: 'tut--code-block', =>
-        @pre =>
-          @code 'var a = 0;'
+      @raw codeBlock.getFromEditor()
       @div class: 'tut--text-below', =>
         @subview 'textBelowEditor', new TextEditorView(editor: textBelowEditor)
 
   initialize: ->
     @subscriptions = new CompositeDisposable
     console.log 'initialized'
-    
+
   openAlert: () ->
     alert 'open'

@@ -11,11 +11,7 @@ class CodeBlock
       scopeName: 'source.coffee'
 
     #TODO: detect langauge type, "source.js", "source.coffee", etc.
-
-    wrappedCode = '<div class="tut--code-block">' +
-      '<pre><code>' + highlightedCode + '</code></pre>' +
-      '</div>'
-
+    wrappedCode = '<div class="tut--code-block"><pre><code>' + highlightedCode + '</code></pre></div>'
     return wrappedCode
 
 module.exports = new CodeBlock()
