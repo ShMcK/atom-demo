@@ -1,5 +1,5 @@
-{$$$, ScrollView, TextEditorView} = require 'atom-space-pen-views'
-{CompositeDisposable, TextEditor} = require 'atom'
+{$, $$$, ScrollView, TextEditorView} = require 'atom-space-pen-views'
+{CompositeDisposable, TextBuffer, TextEditor} = require 'atom'
 
 codeBlock = require './content/code-block'
 markdown = require './content/markdown'
@@ -8,27 +8,43 @@ module.exports =
 class FormView extends ScrollView
 
   @content: (project) ->
-    console.log project
+
+    @aboveBuffer = new TextBuffer
+    @belowBuffer = new TextBuffer
+
+    @textAboveEditor = new TextEditor
+      buffer: @aboveBuffer
+      placeholderText: 'Above text here'
+
+    @textBelowEditor = new TextEditor
+      buffer: @belowBuffer
+      placeholderText: 'Below text here'
 
     @div class: 'tut', =>
       @div class: 'tut--header', =>
-        @p "Tutorial Builder: " + project.title
+        @p =>
+          @tag 'span', "Tutorial Builder: "
+          @tag 'span', class: 'text-success', project.title
       @div class: 'tut--current', =>
-        @p "Ch: " + project.current.chapter + ", Step: " + project.current.step
+        @p =>
+          @tag 'span', "Ch: "
+          @tag 'span', class: 'text-success', project.current.chapter
+          @tag 'span', "  Step: "
+          @tag 'span', class: 'text-success', project.current.step
 
-      @div class: 'tut--text-above', =>
-         @subview 'textAboveEditor', new TextEditorView(editor: @textAboveEditor)
+# class: 'tut--text-above',
+      @subview 'textAboveEditor', new TextEditorView(editor: @textAboveEditor)
+        #  @subview 'textAboveEditor', new TextEditorView(editor: @textAboveEditor)
 
       # code-block
       # TODO: move into TextEditorView, load dynamically, clickable
       @raw codeBlock.getFromEditor()
 
-      @div class: 'tut--text-below', =>
-        @subview 'textBelowEditor', new TextEditorView(editor: @textBelowEditor)
+      @subview 'textBelowEditor', new TextEditorView(editor: @textBelowEditor)
 
       @div class: 'tut--options', =>
-        @button class: 'btn btn-default', click: "stepPrev", "Previous"
-        @button class: 'btn btn-default', click: 'stepAdd', 'Add Step'
+        @button class: 'btn btn-default', click: "stepPrev", "Above"
+        @button class: 'btn btn-default', click: 'stepAdd', 'Below'
         @button class: 'btn btn-default', click: 'chapterAdd', 'Add Chapter'
 
   ###
@@ -39,17 +55,6 @@ class FormView extends ScrollView
     super
     @subscriptions = new CompositeDisposable
 
-    @textAboveEditor = new TextEditor
-      tabLength: 2
-      softTabs: true
-      softWrapped: true
-      placeholderText: 'Text above'
-
-    @textBelowEditor = new TextEditor
-      tabLength: 2
-      softTabs: true
-      softWrapped: true
-      placeholderText: 'Text below'
 
   ###
   #  Nav Project
@@ -57,15 +62,15 @@ class FormView extends ScrollView
 
   # Nav
   stepPrev: ->
-      alert 'prev'
-  stepNext: ->
-      alert 'next'
+    console.log @textAboveEditor.getText()
 
   ###
   #  Change project
   ###
 
   stepAdd: ->
-    console.log atom.workspace.getTextEditors()
+    # console.log @textAboveEditor.getModel()
+    console.log @textAboveEditor.getText()
+
   chapterAdd: ->
     alert 'add chapter'
