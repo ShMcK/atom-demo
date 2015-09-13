@@ -1,4 +1,3 @@
-module.exports = project =
-  title: 'Untitled'
-  description: null
-  keywords: []
+module.exports =
+class Project
+  constructor: (@title = 'Untitled', @description = null, @keywords = []) ->

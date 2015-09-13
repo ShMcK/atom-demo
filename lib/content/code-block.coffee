@@ -8,6 +8,7 @@ class CodeBlock
     # editor = atom.workspace.getActiveTextEditor()
     # code = editor.getText()
 
+    # Practice Example
     code = '@i = 0\n
     func: ->\n
       console.log "test"'
@@ -19,7 +20,6 @@ class CodeBlock
     '</code></pre></div>'
 
   highlightCode: (code, fileType) ->
-    console.log fileType
     return highlighter.highlightSync
       fileContents: code
       scopeName: 'source.' + fileType

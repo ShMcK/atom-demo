@@ -3,16 +3,15 @@
 
 codeBlock = require './content/code-block'
 markdown = require './content/markdown'
-project = require './data/project'
 
 module.exports =
 class FormView extends ScrollView
 
-  @content: (params) ->
+  @content: (project) ->
 
     @div class: 'tut', =>
       @div class: 'tut--header', =>
-        @p "Tutorial Builder: Untitled"
+        @p "Tutorial Builder: " + project.title
 
       @div class: 'tut--text-above', =>
          @subview 'textAboveEditor', new TextEditorView(editor: @textAboveEditor)
@@ -28,6 +27,10 @@ class FormView extends ScrollView
         @button click: "stepPrev", "Previous"
         @button click: 'stepAdd', 'Add Step'
         @button click: 'chapterAdd', 'Add Chapter'
+
+  ###
+  #  Initialize
+  ###
 
   initialize: ->
     super
@@ -45,8 +48,9 @@ class FormView extends ScrollView
       softWrapped: true
       placeholderText: 'Text below'
 
-    @textAboveEditor.setText 'Hello'
-    console.log 'initialized'
+  ###
+  #  Nav Project
+  ###
 
   # Nav
   stepPrev: ->
@@ -54,7 +58,10 @@ class FormView extends ScrollView
   stepNext: ->
       alert 'next'
 
-  # Project
+  ###
+  #  Change project
+  ###
+
   stepAdd: ->
     alert @textAboveEditor.getText()
   chapterAdd: ->
