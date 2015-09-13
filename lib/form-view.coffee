@@ -19,10 +19,10 @@ class FormView extends View
       softWrapped: false
       placeholderText: 'Text below'
 
-     @div class: 'tut', =>
+    @div class: 'tut', =>
       @div class: 'tut--header', =>
-        @h5 "Tutorial Builder: "
-      @button outlet: 'submitButton', class: 'tut--submit', 'Submit'
+        @p "Tutorial Builder: Untitled"
+      @button click: 'openAlert', 'Submit'
       @div class: 'tut--text-above', =>
          @subview 'textAboveEditor', new TextEditorView(editor: textAboveEditor)
       @div class: 'tut--code-block', =>
@@ -30,3 +30,10 @@ class FormView extends View
           @code 'var a = 0;'
       @div class: 'tut--text-below', =>
         @subview 'textBelowEditor', new TextEditorView(editor: textBelowEditor)
+
+  initialize: ->
+    @subscriptions = new CompositeDisposable
+    console.log 'initialized'
+    
+  openAlert: () ->
+    alert 'open'
