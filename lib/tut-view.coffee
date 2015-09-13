@@ -42,5 +42,6 @@ class TutView
   getElement: ->
     @element
 
-$("tut .tut--submit").click ->
+
+$("tut .tut--submit").on 'click', (event) ->
   alert "User clicked on 'foo.'"
