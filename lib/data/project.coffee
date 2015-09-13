@@ -7,7 +7,7 @@ module.exports =
 class Project
   constructor: ->
     @title = 'Untitled'
-    @current = {chapter: 1, step: 1}
+    @current = {chapter: 0, step: 0}
     @data =
       chapters: [
         steps: [
@@ -30,14 +30,14 @@ class Project
   ###
 
   addStep: ->
-    @data.chapters[@current.chapter - 1].steps.push(defaultStep)
+    @data.chapters[@current.chapter].steps.push(defaultStep)
 
   saveStep: (step) ->
-    @data.chapters[@current.chapter - 1].steps[@current.step - 1] = step
+    @data.chapters[@current.chapter].steps[@current.step] = step
     console.log @data
 
   loadStep: () ->
-    return @data.chapters[@current.chapter - 1].steps[@current.step - 1]
+    return @data.chapters[@current.chapter].steps[@current.step]
 
   ###
   #   Chapter

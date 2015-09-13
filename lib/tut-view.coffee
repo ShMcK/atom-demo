@@ -28,9 +28,9 @@ class FormView extends ScrollView
       @div class: 'tut--current', =>
         @p =>
           @tag 'span', 'Ch: '
-          @tag 'span', class: 'text-success', project.current.chapter
+          @tag 'span', class: 'text-success', project.current.chapter + 1
           @tag 'span', '  Step: '
-          @tag 'span', class: 'text-success', project.current.step
+          @tag 'span', class: 'text-success', project.current.step + 1
 
       @div class: 'tut--text-box', =>
         @subview 'textAboveEditor', new TextEditorView(editor: @textAboveEditor)
@@ -79,11 +79,12 @@ class FormView extends ScrollView
 
   stepNext: ->
     step = @model.current.step
-    if step < @model.data.chapters[@model.current.chapter - 1].steps.length
-      @model.updateCurrent(@model.current.step + 1)
+    chapter = @model.current.chapter
+    if step < @model.data.chapters[chapter].steps.length
+      @model.updateCurrent(step + 1)
       @loadStep()
-    else if @model.current.chapter < @model.data.chapters.length
-      @model.updateCurrent(1, @model.current.chapter + 1)
+    else if chapter < @model.data.chapters.length
+      @model.updateCurrent(0, chapter + 1)
       @loadStep()
     else
       console.log 'no next step'
@@ -91,8 +92,13 @@ class FormView extends ScrollView
 
   stepPrev: ->
     step = @model.current.step
-    if step >= 1
+    chapter = @model.current.chapter
+    if step > 0
       @model.updateCurrent(step -1)
+      @loadStep()
+    else if chapter > 0
+      prevChapterFinalStep = @model.data.chapters[chapter - 1].steps.length
+      @model.updateCurrent(prevChapterFinalStep, chapter - 1)
       @loadStep()
     else
       console.log 'no earlier step'
@@ -109,7 +115,7 @@ class FormView extends ScrollView
 
   chapterAdd: ->
     @model.addChapter()
-    @model.updateCurrent(1, @model.current.chapter + 1)
+    @model.updateCurrent(0, @model.current.chapter + 1)
 
 
     alert 'add chapter'
