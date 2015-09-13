@@ -1,10 +1,10 @@
 # TutView = require './tut-view'
-FormView = require './form-view'
+TutView = require './tut-view'
 {CompositeDisposable} = require 'atom'
 
 module.exports = Tut =
   # tutView: null
-  formView: null
+  tutView: null
   panel: null
   subscriptions: null
 
@@ -12,10 +12,8 @@ module.exports = Tut =
 
     console.log state # object
 
-    @formView = new FormView()
-    @panel = atom.workspace.addRightPanel(item: @formView, priority: 100)
-    # @tutView = new TutView(state.tutViewState)
-    # @panel = atom.workspace.addRightPanel(item: @tutView.getElement(), priority: 100)
+    @tutView = new TutView() #state.tutViewState
+    @panel = atom.workspace.addRightPanel(item: @tutView, priority: 100)
 
     # Events subscribed to in atom's system can be easily cleaned up with a CompositeDisposable
     @subscriptions = new CompositeDisposable
@@ -27,12 +25,10 @@ module.exports = Tut =
   deactivate: ->
     @panel.destroy()
     @subscriptions.dispose()
-    # @tutView.destroy()
-    # @formView.destroy()
+    @tutView.destroy()
 
   serialize: ->
     # tutViewState: @tutView.serialize()
-    formViewState: @formView.serialize()
 
   toggle: ->
     console.log 'Tut was toggled!'

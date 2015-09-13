@@ -1,46 +1,50 @@
-# codeBlock = require './content/code-block'
-# markdown = require './content/markdown'
-# project = require './data/project'
-#
-# module.exports =
-# class TutView
-#   constructor: (serializedState) ->
-#     # Create root element
-#     @element = document.createElement('div')
-#     @element.classList.add('tut')
-#
-#     # Nav
-#     header = '<div class="tut--header">Tutorial Builder: ' + project.title + '</div>'
-#
-#     button = '<button class="tut--submit">Submit</button>'
-#
-#     # Create content
-#     content = document.createElement('div')
-#     content.classList.add('tut--view')
-#     content.innerHTML = header +
-#         button +
-#         # TODO: chapter / step
-#         markdown.getAbove() +
-#         codeBlock.getFromEditor() +
-#         markdown.getBelow()
-#
-#     @element.appendChild(content)
-#
-#
-#
-#   submit: ->
-#     alert 'submit!'
-# #
-# #   # Returns an object that can be retrieved when package is activated
-#   serialize: ->
-# #
-# #   # Tear down any state and detach
-#   destroy: ->
-#     @element.remove()
-#
-#   getElement: ->
-#     @element
-#
-#
-# $("tut .tut--submit").on 'click', (event) ->
-#   alert "User clicked on 'foo.'"
+{$$$, ScrollView, TextEditorView} = require 'atom-space-pen-views'
+{CompositeDisposable, TextEditor} = require 'atom'
+
+codeBlock = require './content/code-block'
+markdown = require './content/markdown'
+project = require './data/project'
+
+module.exports =
+class FormView extends ScrollView
+  @content: (params) ->
+
+    textAboveEditor = new TextEditor
+      mini: true
+      tabLength: 2
+      softTabs: true
+      softWrapped: false
+      placeholderText: 'Text above'
+
+    textBelowEditor = new TextEditor
+      mini: true
+      tabLength: 2
+      softTabs: true
+      softWrapped: false
+      placeholderText: 'Text below'
+
+    @div class: 'tut', =>
+      @div class: 'tut--header', =>
+        @p "Tutorial Builder: Untitled"
+
+      @nav class: 'tut--nav', =>
+        @ul =>
+          @li class: 'tut--nav--prev', =>
+           @a href: '#', click: "stepPrev", "<"
+          @li class: 'tut--nav--next', =>
+            @a href: '#', click: "stepNext", ">"
+
+      @div class: 'tut--text-above', =>
+         @subview 'textAboveEditor', new TextEditorView(editor: textAboveEditor)
+      @raw codeBlock.getFromEditor()
+      @div class: 'tut--text-below', =>
+        @subview 'textBelowEditor', new TextEditorView(editor: textBelowEditor)
+
+  initialize: ->
+    @subscriptions = new CompositeDisposable
+    console.log 'initialized'
+
+  stepPrev: ->
+      alert 'prev'
+  stepNext: ->
+      alert 'next'
