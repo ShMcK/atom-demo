@@ -23,13 +23,13 @@ class FormView extends ScrollView
     @div class: 'tut', =>
       @div class: 'tut--header', =>
         @p =>
-          @tag 'span', "Tutorial Builder: "
+          @tag 'span', 'Tutorial Builder: '
           @tag 'span', class: 'text-success', project.title
       @div class: 'tut--current', =>
         @p =>
-          @tag 'span', "Ch: "
+          @tag 'span', 'Ch: '
           @tag 'span', class: 'text-success', project.current.chapter
-          @tag 'span', "  Step: "
+          @tag 'span', '  Step: '
           @tag 'span', class: 'text-success', project.current.step
 
       @div class: 'tut--text-box', =>
@@ -43,18 +43,36 @@ class FormView extends ScrollView
         @subview 'textBelowEditor', new TextEditorView(editor: @textBelowEditor)
 
       @div class: 'tut--options', =>
-        @button class: 'btn btn-default', click: "stepPrev", "Above"
+        @button class: 'btn btn-default', click: 'stepPrev', 'Above'
         @button class: 'btn btn-default', click: 'stepAdd', 'Below'
         @button class: 'btn btn-default', click: 'chapterAdd', 'Add Chapter'
+      @button class: 'btn btn-primary', click: 'save', 'save'
 
   ###
   #  Initialize
   ###
 
-  initialize: ->
+  initialize: (model) ->
     super
     @subscriptions = new CompositeDisposable
+    @data = model.data
+    @current = model.current
+    console.log @current
+    console.log @data
+    @currentStep = @data.chapters[@current.chapter - 1].steps[@current.step - 1]
 
+    # Init values
+    @textAboveEditor.setText(@currentStep.above);
+    @textBelowEditor.setText(@currentStep.below);
+
+
+  save: ->
+    # TODO: automate save
+    @currentStep =
+      above: @textAboveEditor.getText()
+      below: @textBelowEditor.getText()
+      code: codeBlock.code
+    console.log @currentStep
 
   ###
   #  Nav Project

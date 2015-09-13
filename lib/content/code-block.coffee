@@ -3,20 +3,18 @@ Highlights = require 'highlights'
 highlighter = new Highlights()
 
 class CodeBlock
+  constructor: ->
+    @code = '@i = 0\n func: ->\n console.log "test"'
+
   getFromEditor: ->
     # TODO: change to git diff from previous commit
     # editor = atom.workspace.getActiveTextEditor()
     # code = editor.getText()
 
-    # Practice Example
-    code = '@i = 0\n
-    func: ->\n
-      console.log "test"'
-
     #TODO: detect langauge type, "source.js", "source.coffee", etc.
 
     return '<div class="tut--code-block"><pre><code>' +
-      @highlightCode(code, "coffee") +
+      @highlightCode(@code, "coffee") +
     '</code></pre></div>'
 
   highlightCode: (code, fileType) ->
