@@ -1,6 +1,8 @@
 {$, $$$, ScrollView, TextEditorView} = require 'atom-space-pen-views'
 {CompositeDisposable, TextBuffer, TextEditor} = require 'atom'
 
+diff = require './git/model/git-diff'
+
 codeBlock = require './content/code-block'
 markdown = require './content/markdown'
 
@@ -48,7 +50,13 @@ class FormView extends ScrollView
       @div class: 'tut--options', =>
         @button class: 'btn btn-default', click: 'stepAdd', 'Add Step'
         @button class: 'btn btn-default', click: 'chapterAdd', 'Add Chapter'
-      @button class: 'btn btn-primary', click: 'save', 'save'
+      @div class: 'tut--options', =>
+        @button class: 'btn btn-primary', click: 'save', 'save'
+
+      @div class: 'tut-options', =>
+        @p 'git tests'
+        @button class: 'btn btn-primary', click: 'checkoutOld', 'Old'
+        @button class: 'btn btn-primary', click: 'checkoutNew', 'New'
 
   ###
   #  Initialize
@@ -63,7 +71,7 @@ class FormView extends ScrollView
 
   loadStep: () ->
     $('.tut--chapter').text(@model.current.chapter + 1)
-    $('.tut--step').text(@model.current.step + 1) 
+    $('.tut--step').text(@model.current.step + 1)
 
     @currentStep = @model.loadStep()
     @textAboveEditor.setText @currentStep.above
@@ -127,5 +135,13 @@ class FormView extends ScrollView
     @model.addChapter()
     @model.updateCurrent(0, @model.current.chapter + 1)
 
+  ###
+  #  Git Tests
+  ###
+  checkoutOld: ->
+    repo = atom.project.getRepositories()[0]
+    console.log diff(repo)
+    # git.checkout '213a8c2'
 
-    alert 'add chapter'
+  checkoutNew: ->
+    # git.checkout 'ada7ac5'

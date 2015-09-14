@@ -1,6 +1,5 @@
 # TutView = require './tut-view'
 TutView = require './tut-view'
-Git = require './content/git'
 {CompositeDisposable} = require 'atom'
 Project = require './data/project'
 
@@ -11,8 +10,6 @@ module.exports = Tut =
   subscriptions: null
 
   activate: (state) ->
-
-    Git.init()
 
     project = new Project()
     @tutView = new TutView(project) #state.tutViewState
