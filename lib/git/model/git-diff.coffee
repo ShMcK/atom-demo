@@ -26,23 +26,20 @@ gitDiff = (repo, {diffStat, file}={}) ->
 
 processDiff = (text) ->
   if text?.length > 0
-    # data here
-    diffStatMatch = new RegExp(/^@@ (.+?(?= @@))/m)
-    diffStat = text.match(diffStatMatch)[0].slice(3)
-    start = text.indexOf('@@ ' + diffStat + ' @@') + diffStat.length + 6
-
-    patch = text.slice(start)
-
-    formattedPatch = patch.split('\n').map (item) ->
+    formattedPatch = formatDiff(text).split('\n').map (item) ->
       labelChange(item)
-
+    console.log formattedPatch
     return formattedPatch
-
   else
     notifier.addInfo 'Nothing to show.'
 
 # get patch only
 formatDiff = (text) ->
+  diffStatMatch = new RegExp(/^@@ (.+?(?= @@))/m)
+  diffStat = text.match(diffStatMatch)[0].slice(3)
+  start = text.indexOf('@@ ' + diffStat + ' @@') + diffStat.length + 6
+  patch = text.slice(start)
+  return patch
 
 # break patch into { line: String, changes: '+/-' }
 labelChange = (line) ->

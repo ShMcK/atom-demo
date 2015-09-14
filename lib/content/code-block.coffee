@@ -13,9 +13,7 @@ class CodeBlock
 
     #TODO: detect langauge type, "source.js", "source.coffee", etc.
 
-    return '<div class="tut--code-block"><pre><code>' +
-      @highlightCode(@code, "coffee") +
-    '</code></pre></div>'
+    return @highlightCode(@code, "coffee")
 
   highlightCode: (code, fileType) ->
     return highlighter.highlightSync

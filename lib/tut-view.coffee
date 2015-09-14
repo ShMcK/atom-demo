@@ -39,7 +39,7 @@ class FormView extends ScrollView
 
       # code-block
       # TODO: move into TextEditorView, load dynamically, clickable
-      @raw codeBlock.getFromEditor()
+      @div class: 'tut--code-block', outlet: 'codeBlock'
 
       @div class: 'tut--text-box', =>
         @subview 'textBelowEditor', new TextEditorView(editor: @textBelowEditor)
@@ -54,7 +54,7 @@ class FormView extends ScrollView
         @button class: 'btn btn-primary', click: 'save', 'save'
 
       @div class: 'tut-options', =>
-        @p 'git tests'
+        @p 'testing'
         @button class: 'btn btn-primary', click: 'checkoutOld', 'Old'
         @button class: 'btn btn-primary', click: 'checkoutNew', 'New'
 
@@ -77,6 +77,7 @@ class FormView extends ScrollView
     @textAboveEditor.setText @currentStep.above
     @textBelowEditor.setText @currentStep.below
     codeBlock.setCode @currentStep.code
+    @updateCodeBlock()
 
 
   save: ->
@@ -86,6 +87,13 @@ class FormView extends ScrollView
       below: @textBelowEditor.getText()
       code: codeBlock.code
     @model.saveStep(@currentStep)
+
+  ###
+  #  Update CodeBlock
+  ###
+
+  updateCodeBlock: ->
+    @codeBlock.append codeBlock.getFromEditor()
 
   ###
   #  Navigation
@@ -138,6 +146,7 @@ class FormView extends ScrollView
   ###
   #  Git Tests
   ###
+
   checkoutOld: ->
     repo = atom.project.getRepositories()[0]
     console.log diff(repo)
