@@ -16,6 +16,7 @@
   "dependencies": {
     "highlights": "1.2.0",
     "atom-space-pen-views": "2.1.0",
-    "fs-plus": "2.8.1"
+    "fs-plus": "2.8.1",
+    "es6-promise": "3.0.2"
   }
 }

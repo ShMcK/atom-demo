@@ -16,13 +16,14 @@ gitDiff = (repo, {diffStat, file}={}) ->
   diffStat ?= ''
   args = ['diff', '--color=never']
   args.push file if diffStat is ''
-  git.cmd
+  return git.cmd
     args: args
     cwd: repo.getWorkingDirectory()
     stdout: (data) ->
       diffStat += data
     exit: (code) ->
-      processDiff diffStat if code is 0
+      if code is 0
+        return processDiff diffStat
 
 processDiff = (text) ->
   if text?.length > 0

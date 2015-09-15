@@ -1,7 +1,8 @@
 {$, $$$, ScrollView, TextEditorView} = require 'atom-space-pen-views'
 {CompositeDisposable, TextBuffer, TextEditor} = require 'atom'
+Promise = require('es6-promise').Promise;
 
-diff = require './git/model/git-diff'
+{gitDiff} = require './git/git'
 
 codeBlock = require './content/code-block'
 markdown = require './content/markdown'
@@ -149,8 +150,16 @@ class FormView extends ScrollView
 
   checkoutOld: ->
     repo = atom.project.getRepositories()[0]
-    console.log diff(repo)
-    # git.checkout '213a8c2'
+    processDiffPatch = new Promise((resolve, reject) ->
+      patch = gitDiff(repo)
+      resolve patch
+      reject Error 'error processing diff patch'
+      return
+    )
+    processDiffPatch.then (patch) ->
+      console.log 'patch', patch
+      alert patch
+      codeBlock.render patch
 
   checkoutNew: ->
     # git.checkout 'ada7ac5'

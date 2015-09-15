@@ -23,4 +23,15 @@ class CodeBlock
   setCode: (code) ->
     @code = code;
 
+  render: (patch) ->
+    console.log 'patch', patch
+    output = '';
+    patch.map (line) ->
+      if !line.change then return
+      if line.change is '+'
+        output += '\n' + line.line
+    console.log output
+    return output
+
+
 module.exports = new CodeBlock()

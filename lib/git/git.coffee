@@ -186,14 +186,14 @@ getRepoForCurrentFile = ->
       reject "no current file"
 
 module.exports.cmd = gitCmd
-module.exports.stagedFiles = gitStagedFiles
-module.exports.unstagedFiles = gitUnstagedFiles
+# module.exports.stagedFiles = gitStagedFiles
+# module.exports.unstagedFiles = gitUnstagedFiles
 module.exports.diff = gitDiff
-module.exports.refresh = gitRefresh
-module.exports.status = gitStatus
-module.exports.reset = gitResetHead
-module.exports.add = gitAdd
-module.exports.dir = dir
-module.exports.relativize = relativize
-module.exports.getSubmodule = getSubmodule
-module.exports.getRepo = getRepo
+# module.exports.refresh = gitRefresh
+# module.exports.status = gitStatus
+# module.exports.reset = gitResetHead
+# module.exports.add = gitAdd
+# module.exports.dir = dir
+# module.exports.relativize = relativize
+# module.exports.getSubmodule = getSubmodule
+# module.exports.getRepo = getRepo
