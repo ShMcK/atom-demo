@@ -28,18 +28,16 @@ module.exports = ProjectStore = Reflux.createStore
       chapter: 0
       step: 0
 
-  load: ->
-    project =
-      info: @info
-      data: @data
-      current: @current
-    return project
+  # Current
+  chapter: ->
+    return @data.chapters[@current.chapter]
+  step: ->
+    return @chapter().steps[@current.step]
 
-
-    # Steps
+  # Steps
   onAddStep: ->
     console.log 'ProjectStore:addStep'
-    @trigger @data.chapters[@current.chapter].steps[@current.step + 1] = defaultStep
+    @trigger @chapter().steps[@current.step + 1] = defaultStep
     @onUpdateCurrent(@current.step + 1)
 
   onSaveStep: (text) ->
@@ -47,26 +45,29 @@ module.exports = ProjectStore = Reflux.createStore
     step =
       above: text.above
       below: text.below
-      code: @currentStep.code
-      
+      code: @step().code
     @trigger @data.chapters[@current.chapter].steps[@current.step] = step
 
   onLoadstep: ->
     console.log 'Projectstore:loadStep'
-    @trigger @data.chapters[@current.chapter].steps[@current.step]
+    @trigger @step()
 
-    # Chapter
   onAddChapter: ->
     console.log 'ProjectStore:addChapter'
-    @trigger @data.chapters.push(steps = [defaultStep])
-    @onUpdateCurrent(0, @current.chapter + 1)
+    nextChapter = @current.chapter + 1
+    if !@data.chapters[nextChapter]
+      console.log 'creating new chapter'
+      @data.chapters[nextChapter] =
+        steps: []
+      console.log @data.chapters[nextChapter]
+      @data.chapters[nextChapter].steps.push(defaultStep)
+    console.log 'added chapter', @data
+    @onUpdateCurrent(0, nextChapter)
 
     # Update
   onUpdateCodeBlock: (code) ->
     console.log 'ProjectStore:updateCodeBlock'
     @trigger @data.chapters[@current.chapter].steps[@current.step].code = code
-
-
 
     # Current Position
   onUpdateCurrent: (step, chapter) ->
@@ -78,7 +79,7 @@ module.exports = ProjectStore = Reflux.createStore
   onNextStep: ->
     step = @current.step
     chapter = @current.chapter
-    if step < @data.chapters[chapter].steps.length - 1
+    if step < @chapter().steps.length - 1
       console.log 'next step'
       @onUpdateCurrent(step + 1)
     else if chapter < @data.chapters.length - 1
@@ -93,9 +94,11 @@ module.exports = ProjectStore = Reflux.createStore
     if step > 0
       console.log 'prev step'
       @onUpdateCurrent(step - 1)
-    else if chapter > 0
+    else if chapter >= 1
+      console.log chapter
       console.log 'prev chapter'
-      prevChapterFinalStep = @data.chapters[chapter - 1].steps.length
+      prevChapterFinalStep = @data.chapters[chapter - 1].steps.length - 1
+      console.log prevChapterFinalStep
       @onUpdateCurrent(prevChapterFinalStep, chapter - 1)
     else
       console.log 'no earlier step'

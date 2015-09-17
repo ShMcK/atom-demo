@@ -2,7 +2,7 @@
 {CompositeDisposable, TextBuffer, TextEditor} = require 'atom'
 Reflux = require 'reflux'
 
-CodeBlock = require './utils/code-block'
+CodeHighlight = require './utils/code-highlight'
 ProjectActions = require './actions/project-actions'
 NavActions = require './actions/nav-actions'
 ProjectStore = require './stores/project-store'
@@ -67,15 +67,21 @@ class FormView extends ScrollView
   initialize: () ->
     super
     @project = ProjectStore
-    @currentStep = @project.data.chapters[@project.current.chapter].steps[@project.current.step]
     @subscriptions = new CompositeDisposable
-    @loadStep()
+    @onUpdate()
 
     @project.listen () =>
       console.log 'change!'
-      @loadStep()
+      @onUpdate()
 
-  loadStep: () ->
+  getCurrentStep: () ->
+    console.log @project
+    @currentStep = @project.data.chapters[@project.current.chapter].steps[@project.current.step]
+    console.log 'currentStep', @currentStep
+
+  onUpdate: () ->
+    console.log 'onUpdate'
+    @getCurrentStep()
     # View Data
     @title.text @project.info.title
     @step.text @project.current.step + 1
@@ -84,29 +90,37 @@ class FormView extends ScrollView
     # Content
     @textAEditor.setText @currentStep.above
     @textBEditor.setText @currentStep.below
-    @codeBlock.html CodeBlock.format(@currentStep.code)
+    @codeBlock.html CodeHighlight(@currentStep.code, 'coffee')
 
   save: ->
     text =
-      above: @textAEditor.getText()
-      below: @textBEditor.getText()
+      above: @textAEditor.getText() || ''
+      below: @textBEditor.getText() || ''
     ProjectActions.saveStep(text)
 
   ###
   #  Navigation
   ###
 
-  nextStep: -> NavActions.nextStep()
+  nextStep: ->
+    @save()
+    NavActions.nextStep()
 
-  prevStep: -> NavActions.prevStep()
+  prevStep: ->
+    @save()
+    NavActions.prevStep()
 
   ###
   #  Add
   ###
 
-  addStep: -> ProjectActions.addStep()
+  addStep: ->
+    @save()
+    ProjectActions.addStep()
 
-  addChapter: -> ProjectActions.addChapter()
+  addChapter: ->
+    @save()
+    ProjectActions.addChapter()
 
   ###
   #  Git Tests
