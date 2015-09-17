@@ -10,7 +10,10 @@ module.exports = ProjectStore = Reflux.createStore
   listenables: ProjectActions
 
   init: ->
-    @title = 'Untitled'
+    @details =
+      title: 'Untitled'
+      description: ''
+
     @data =
       chapters: [
         steps: [
@@ -19,6 +22,7 @@ module.exports = ProjectStore = Reflux.createStore
           code: '@i = 0\n func: ->\n console.log "test"'
         ]
       ]
+
     @current =
       chapter: 0
       step: 0
@@ -49,6 +53,6 @@ module.exports = ProjectStore = Reflux.createStore
     # Current Position
   onUpdateCurrent: (step, chapter) ->
     console.log 'onUpdateCurrent', step, chapter
-    @current =
+    @trigger @current =
       step: step
       chapter: chapter || @current.chapter

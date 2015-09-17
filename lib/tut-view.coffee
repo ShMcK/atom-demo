@@ -1,10 +1,9 @@
+Reflux = require 'reflux'
 ProjectActions = require './actions/project-actions'
 ProjectStore = require './stores/project-store'
 
 {$, $$$, ScrollView, TextEditorView} = require 'atom-space-pen-views'
 {CompositeDisposable, TextBuffer, TextEditor} = require 'atom'
-
-#{gitDiff} = require './git/git'
 
 codeBlock = require './content/code-block'
 markdown = require './content/markdown'
@@ -71,6 +70,11 @@ class FormView extends ScrollView
     @model = model
     @loadStep()
 
+    ProjectStore.listen () ->
+      console.log 'change!'
+
+  onProjectChange: ->
+    console.log 'onProjectChange'
 
   loadStep: () ->
     $('.tut--chapter').text(@model.current.chapter + 1)
@@ -166,4 +170,4 @@ class FormView extends ScrollView
   checkoutNew: ->
     console.log 'clicked';
 
-    ProjectActions.updateCurrent(0, 0)
+    ProjectActions.updateCurrent(1, 0)
