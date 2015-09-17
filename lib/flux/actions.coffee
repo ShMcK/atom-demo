@@ -1,10 +1,22 @@
-module.exports = actions =
-  
+Reflux = require 'reflux'
+
+Actions = Reflux.createActions([
+  'addStep'
+  'addChapter'
+  'updateCodeBlock'
+])
+
   # Steps
-  addStep: ->
+Actions.addStep = ->
+  console.log 'addStep'
 
   # Chapter
-  addChapter: ->
+Actions.addChapter = ->
+  console.log 'addStep'
 
   # Update
-  updateCodeBlock: ->
+Actions.updateCodeBlock = ->
+  console.log 'addStep'
+
+
+module.exports = Actions

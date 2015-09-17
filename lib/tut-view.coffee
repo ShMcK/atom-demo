@@ -1,3 +1,4 @@
+Actions = require './flux/actions'
 {$, $$$, ScrollView, TextEditorView} = require 'atom-space-pen-views'
 {CompositeDisposable, TextBuffer, TextEditor} = require 'atom'
 Promise = require('es6-promise').Promise;
@@ -162,4 +163,4 @@ class FormView extends ScrollView
       codeBlock.render patch
 
   checkoutNew: ->
-    # git.checkout 'ada7ac5'
+    Actions.addStep()

@@ -1,8 +1,7 @@
-{constants} = require './constants'
-Fluxxor = require 'fluxxor'
+Reflux = require 'reflux'
+Actions = require './actions'
 
-module.exports = ProjectStore = Fluxxor.createStore
-  initialize: ->
+module.exports = ProjectStore = Reflux.createStore
+  listenables: [Actions]
+  init: ->
     @project = {}
-
-    @bindActions()
