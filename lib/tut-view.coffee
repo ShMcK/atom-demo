@@ -1,29 +1,27 @@
-Reflux = require 'reflux'
-ProjectActions = require './actions/project-actions'
-ProjectStore = require './stores/project-store'
-
 {$, $$$, ScrollView, TextEditorView} = require 'atom-space-pen-views'
 {CompositeDisposable, TextBuffer, TextEditor} = require 'atom'
+Reflux = require 'reflux'
 
-codeBlock = require './content/code-block'
-markdown = require './content/markdown'
+CodeBlock = require './utils/code-block'
+ProjectActions = require './actions/project-actions'
+NavActions = require './actions/nav-actions'
+ProjectStore = require './stores/project-store'
 
 module.exports =
 class FormView extends ScrollView
 
-  @content: (initProject) ->
+  # can load content
+  @content: () ->
 
-    console.log initProject
+    @textABuffer = new TextBuffer
+    @textBBuffer = new TextBuffer
 
-    @aboveBuffer = new TextBuffer
-    @belowBuffer = new TextBuffer
-
-    @textAboveEditor = new TextEditor
-      buffer: @aboveBuffer
+    @textAEditor = new TextEditor
+      buffer: @textABuffer
       placeholderText: 'Above text here'
 
-    @textBelowEditor = new TextEditor
-      buffer: @belowBuffer
+    @textBEditor = new TextEditor
+      buffer: @textBBuffer
       placeholderText: 'Below text here'
 
     @div class: 'tut', =>
@@ -39,21 +37,21 @@ class FormView extends ScrollView
           @tag 'span', class: 'text-success tut--step', outlet: 'step'
 
       @div class: 'tut--text-box', =>
-        @subview 'textAboveEditor', new TextEditorView(editor: @textAboveEditor)
+        @subview 'textAEditor', new TextEditorView(editor: @textAEditor)
 
       # code-block
       # TODO: move into TextEditorView, load dynamically, clickable
       @div class: 'tut--code-block', outlet: 'codeBlock'
 
       @div class: 'tut--text-box', =>
-        @subview 'textBelowEditor', new TextEditorView(editor: @textBelowEditor)
+        @subview 'textBEditor', new TextEditorView(editor: @textBEditor)
 
       @div class: 'tut--options', =>
-        @button class: 'btn btn-default', click: 'stepPrev', 'Prev'
-        @button class: 'btn btn-default', click: 'stepNext', 'Next'
+        @button class: 'btn btn-default', click: 'prevStep', 'Prev'
+        @button class: 'btn btn-default', click: 'nextStep', 'Next'
       @div class: 'tut--options', =>
-        @button class: 'btn btn-default', click: 'stepAdd', 'Add Step'
-        @button class: 'btn btn-default', click: 'chapterAdd', 'Add Chapter'
+        @button class: 'btn btn-default', click: 'addStep', 'Add Step'
+        @button class: 'btn btn-default', click: 'addChapter', 'Add Chapter'
       @div class: 'tut--options', =>
         @button class: 'btn btn-primary', click: 'save', 'save'
 
@@ -68,91 +66,47 @@ class FormView extends ScrollView
 
   initialize: () ->
     super
-    @subscriptions = new CompositeDisposable
     @project = ProjectStore
-
-
+    @currentStep = @project.data.chapters[@project.current.chapter].steps[@project.current.step]
+    @subscriptions = new CompositeDisposable
     @loadStep()
 
-    @project.listen () ->
+    @project.listen () =>
       console.log 'change!'
-
-  onProjectChange: ->
-    console.log 'onProjectChange'
+      @loadStep()
 
   loadStep: () ->
+    # View Data
     @title.text @project.info.title
     @step.text @project.current.step + 1
     @chapter.text @project.current.chapter + 1
 
-    # @textAboveEditor.setText @currentStep.above
-    # @textBelowEditor.setText @currentStep.below
-    # codeBlock.setCode @currentStep.code
-    # @updateCodeBlock()
-
+    # Content
+    @textAEditor.setText @currentStep.above
+    @textBEditor.setText @currentStep.below
+    @codeBlock.html CodeBlock.format(@currentStep.code)
 
   save: ->
-    # TODO: automate save
-    # @currentStep =
-    #   above: @textAboveEditor.getText()
-    #   below: @textBelowEditor.getText()
-    #   code: codeBlock.code
-    # @model.saveStep(@currentStep)
-
-  ###
-  #  Update CodeBlock
-  ###
-
-  updateCodeBlock: ->
-    # @codeBlock.append codeBlock.getFromEditor()
+    text =
+      above: @textAEditor.getText()
+      below: @textBEditor.getText()
+    ProjectActions.saveStep(text)
 
   ###
   #  Navigation
   ###
 
-  stepNext: ->
-    # step = @model.current.step
-    # chapter = @model.current.chapter
-    # if step < @model.data.chapters[chapter].steps.length - 1
-    #   console.log 'next step'
-    #   @model.updateCurrent(step + 1)
-    #   @loadStep()
-    # else if chapter < @model.data.chapters.length - 1
-    #   console.log 'next chapter'
-    #   @model.updateCurrent(0, chapter + 1)
-    #   @loadStep()
-    # else
-    #   console.log 'no next step'
+  nextStep: -> NavActions.nextStep()
 
-
-  stepPrev: ->
-    # step = @model.current.step
-    # chapter = @model.current.chapter
-    # if step > 0
-    #   console.log 'prev step'
-    #   @model.updateCurrent(step - 1)
-    #   @loadStep()
-    # else if chapter > 0
-    #   console.log 'prev chapter'
-    #   prevChapterFinalStep = @model.data.chapters[chapter - 1].steps.length
-    #   @model.updateCurrent(prevChapterFinalStep, chapter - 1)
-    #   @loadStep()
-    # else
-    #   console.log 'no earlier step'
+  prevStep: -> NavActions.prevStep()
 
   ###
   #  Add
   ###
 
-  stepAdd: ->
-    # console.log @textAboveEditor.getModel()
-    # console.log @textAboveEditor.getText()
-    # @model.addStep()
-    # @stepNext()
+  addStep: -> ProjectActions.addStep()
 
-  chapterAdd: ->
-    # @model.addChapter()
-    # @model.updateCurrent(0, @model.current.chapter + 1)
+  addChapter: -> ProjectActions.addChapter()
 
   ###
   #  Git Tests

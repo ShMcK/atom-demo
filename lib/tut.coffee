@@ -1,7 +1,6 @@
 # TutView = require './tut-view'
 TutView = require './tut-view'
 {CompositeDisposable} = require 'atom'
-ProjectStore = require './stores/project-store'
 
 module.exports = Tut =
   # tutView: null
@@ -11,9 +10,8 @@ module.exports = Tut =
 
   activate: (state) ->
 
-    initProject = ProjectStore.load()
 
-    @tutView = new TutView(initProject) #state.tutViewState
+    @tutView = new TutView() #state.tutViewState
     @panel = atom.workspace.addRightPanel(item: @tutView, priority: 100)
 
     # Events subscribed to in atom's system can be easily cleaned up with a CompositeDisposable

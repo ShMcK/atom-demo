@@ -1,8 +1,8 @@
 Reflux = require 'reflux'
 
-ProjectActions = Reflux.createActions([
+module.exports = ProjectActions = Reflux.createActions([
   # steps
-  'addStesp'
+  'addStep'
   'saveStep'
   'loadStep'
   # chapter
@@ -12,5 +12,3 @@ ProjectActions = Reflux.createActions([
   # position
   'updateCurrent'
 ])
-
-module.exports = ProjectActions
