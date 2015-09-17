@@ -1,9 +1,10 @@
-Actions = require './flux/actions'
+ProjectActions = require './actions/project-actions'
+ProjectStore = require './stores/project-store'
+
 {$, $$$, ScrollView, TextEditorView} = require 'atom-space-pen-views'
 {CompositeDisposable, TextBuffer, TextEditor} = require 'atom'
-Promise = require('es6-promise').Promise;
 
-{gitDiff} = require './git/git'
+#{gitDiff} = require './git/git'
 
 codeBlock = require './content/code-block'
 markdown = require './content/markdown'
@@ -151,16 +152,18 @@ class FormView extends ScrollView
 
   checkoutOld: ->
     repo = atom.project.getRepositories()[0]
-    processDiffPatch = new Promise((resolve, reject) ->
-      patch = gitDiff(repo)
-      resolve patch
-      reject Error 'error processing diff patch'
-      return
-    )
-    processDiffPatch.then (patch) ->
-      console.log 'patch', patch
-      alert patch
-      codeBlock.render patch
+    # processDiffPatch = new Promise((resolve, reject) ->
+    #   patch = gitDiff(repo)
+    #   resolve patch
+    #   reject Error 'error processing diff patch'
+    #   return
+    # )
+    # processDiffPatch.then (patch) ->
+    #   console.log 'patch', patch
+    #   alert patch
+    #   codeBlock.render patch
 
   checkoutNew: ->
-    Actions.addStep()
+    console.log 'clicked';
+
+    ProjectActions.updateCurrent(0, 0)
