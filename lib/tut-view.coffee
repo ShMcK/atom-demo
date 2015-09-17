@@ -11,7 +11,9 @@ markdown = require './content/markdown'
 module.exports =
 class FormView extends ScrollView
 
-  @content: (project) ->
+  @content: (initProject) ->
+
+    console.log initProject
 
     @aboveBuffer = new TextBuffer
     @belowBuffer = new TextBuffer
@@ -28,13 +30,13 @@ class FormView extends ScrollView
       @div class: 'tut--header', =>
         @p =>
           @tag 'span', 'Tutorial Builder: '
-          @tag 'span', class: 'text-success', project.title
+          @tag 'span', class: 'text-success', outlet: 'title'
       @div class: 'tut--current', =>
         @p =>
           @tag 'span', 'Ch: '
-          @tag 'span', class: 'text-success tut--chapter', project.current.chapter + 1
+          @tag 'span', class: 'text-success tut--chapter', outlet: 'chapter'
           @tag 'span', '  Step: '
-          @tag 'span', class: 'text-success tut--step', project.current.step + 1
+          @tag 'span', class: 'text-success tut--step', outlet: 'step'
 
       @div class: 'tut--text-box', =>
         @subview 'textAboveEditor', new TextEditorView(editor: @textAboveEditor)
@@ -64,77 +66,79 @@ class FormView extends ScrollView
   #  Initialize
   ###
 
-  initialize: (model) ->
+  initialize: () ->
     super
     @subscriptions = new CompositeDisposable
-    @model = model
+    @project = ProjectStore
+
+
     @loadStep()
 
-    ProjectStore.listen () ->
+    @project.listen () ->
       console.log 'change!'
 
   onProjectChange: ->
     console.log 'onProjectChange'
 
   loadStep: () ->
-    $('.tut--chapter').text(@model.current.chapter + 1)
-    $('.tut--step').text(@model.current.step + 1)
+    @title.text @project.info.title
+    @step.text @project.current.step + 1
+    @chapter.text @project.current.chapter + 1
 
-    @currentStep = @model.loadStep()
-    @textAboveEditor.setText @currentStep.above
-    @textBelowEditor.setText @currentStep.below
-    codeBlock.setCode @currentStep.code
-    @updateCodeBlock()
+    # @textAboveEditor.setText @currentStep.above
+    # @textBelowEditor.setText @currentStep.below
+    # codeBlock.setCode @currentStep.code
+    # @updateCodeBlock()
 
 
   save: ->
     # TODO: automate save
-    @currentStep =
-      above: @textAboveEditor.getText()
-      below: @textBelowEditor.getText()
-      code: codeBlock.code
-    @model.saveStep(@currentStep)
+    # @currentStep =
+    #   above: @textAboveEditor.getText()
+    #   below: @textBelowEditor.getText()
+    #   code: codeBlock.code
+    # @model.saveStep(@currentStep)
 
   ###
   #  Update CodeBlock
   ###
 
   updateCodeBlock: ->
-    @codeBlock.append codeBlock.getFromEditor()
+    # @codeBlock.append codeBlock.getFromEditor()
 
   ###
   #  Navigation
   ###
 
   stepNext: ->
-    step = @model.current.step
-    chapter = @model.current.chapter
-    if step < @model.data.chapters[chapter].steps.length - 1
-      console.log 'next step'
-      @model.updateCurrent(step + 1)
-      @loadStep()
-    else if chapter < @model.data.chapters.length - 1
-      console.log 'next chapter'
-      @model.updateCurrent(0, chapter + 1)
-      @loadStep()
-    else
-      console.log 'no next step'
+    # step = @model.current.step
+    # chapter = @model.current.chapter
+    # if step < @model.data.chapters[chapter].steps.length - 1
+    #   console.log 'next step'
+    #   @model.updateCurrent(step + 1)
+    #   @loadStep()
+    # else if chapter < @model.data.chapters.length - 1
+    #   console.log 'next chapter'
+    #   @model.updateCurrent(0, chapter + 1)
+    #   @loadStep()
+    # else
+    #   console.log 'no next step'
 
 
   stepPrev: ->
-    step = @model.current.step
-    chapter = @model.current.chapter
-    if step > 0
-      console.log 'prev step'
-      @model.updateCurrent(step - 1)
-      @loadStep()
-    else if chapter > 0
-      console.log 'prev chapter'
-      prevChapterFinalStep = @model.data.chapters[chapter - 1].steps.length
-      @model.updateCurrent(prevChapterFinalStep, chapter - 1)
-      @loadStep()
-    else
-      console.log 'no earlier step'
+    # step = @model.current.step
+    # chapter = @model.current.chapter
+    # if step > 0
+    #   console.log 'prev step'
+    #   @model.updateCurrent(step - 1)
+    #   @loadStep()
+    # else if chapter > 0
+    #   console.log 'prev chapter'
+    #   prevChapterFinalStep = @model.data.chapters[chapter - 1].steps.length
+    #   @model.updateCurrent(prevChapterFinalStep, chapter - 1)
+    #   @loadStep()
+    # else
+    #   console.log 'no earlier step'
 
   ###
   #  Add
@@ -142,20 +146,20 @@ class FormView extends ScrollView
 
   stepAdd: ->
     # console.log @textAboveEditor.getModel()
-    console.log @textAboveEditor.getText()
-    @model.addStep()
-    @stepNext()
+    # console.log @textAboveEditor.getText()
+    # @model.addStep()
+    # @stepNext()
 
   chapterAdd: ->
-    @model.addChapter()
-    @model.updateCurrent(0, @model.current.chapter + 1)
+    # @model.addChapter()
+    # @model.updateCurrent(0, @model.current.chapter + 1)
 
   ###
   #  Git Tests
   ###
 
   checkoutOld: ->
-    repo = atom.project.getRepositories()[0]
+    # repo = atom.project.getRepositories()[0]
     # processDiffPatch = new Promise((resolve, reject) ->
     #   patch = gitDiff(repo)
     #   resolve patch

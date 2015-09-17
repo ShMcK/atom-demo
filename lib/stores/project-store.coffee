@@ -10,7 +10,7 @@ module.exports = ProjectStore = Reflux.createStore
   listenables: ProjectActions
 
   init: ->
-    @details =
+    @info =
       title: 'Untitled'
       description: ''
 
@@ -27,28 +27,36 @@ module.exports = ProjectStore = Reflux.createStore
       chapter: 0
       step: 0
 
+  load: ->
+    project =
+      info: @info
+      data: @data
+      current: @current
+    return project
+
+
     # Steps
   onAddStep: ->
     console.log 'ProjectStore:addStep'
-    @data.chapters[@current.chapter].steps[@current.step + 1] = defaultStep
+    @trigger @data.chapters[@current.chapter].steps[@current.step + 1] = defaultStep
 
   onSaveStep: (step) ->
     console.log 'ProjectStore:saveStep'
-    @data.chapters[@current.chapter].steps[@current.step] = step
+    @trigger @data.chapters[@current.chapter].steps[@current.step] = step
 
   onLoadstep: ->
     console.log 'Projectstore:loadStep'
-    return @data.chapters[@current.chapter].steps[@current.step]
+    @trigger @data.chapters[@current.chapter].steps[@current.step]
 
     # Chapter
   onAddChapter: ->
     console.log 'ProjectStore:addChapter'
-    @data.chapters.push(steps = [defaultStep])
+    @trigger @data.chapters.push(steps = [defaultStep])
 
     # Update
-  onUpdateCodeBlock: ->
+  onUpdateCodeBlock: (code) ->
     console.log 'ProjectStore:updateCodeBlock'
-    # git diff
+    @trigger @data.chapters[@current.chapter].steps[@current.step].code = code
 
     # Current Position
   onUpdateCurrent: (step, chapter) ->
