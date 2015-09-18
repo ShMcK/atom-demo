@@ -3,7 +3,7 @@ Path = require 'path'
 fs = require 'fs-plus'
 
 git = require '../git'
-notifier = require '../notifier'
+notifier = require '../../notifier'
 
 disposables = new CompositeDisposable
 diffFilePath = null

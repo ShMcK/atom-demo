@@ -1,6 +1,6 @@
 {BufferedProcess} = require 'atom'
 RepoListView = require './views/repo-list-view'
-notifier = require '../notifier'
+notifier = require './notifier'
 
 # TODO: update for multiple repos
 repo = atom.project.getRepositories()[0]

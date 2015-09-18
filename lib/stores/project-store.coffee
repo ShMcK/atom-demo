@@ -2,6 +2,7 @@ Reflux = require 'reflux'
 ProjectActions = require '../actions/project-actions'
 NavActions = require '../actions/nav-actions'
 GitActions = require '../actions/git-actions'
+Notifier = require '../utils/notifier'
 
 defaultStep =
   above: ''
@@ -89,6 +90,7 @@ module.exports = ProjectStore = Reflux.createStore
       @onUpdateCurrent(0, chapter + 1)
     else
       console.log 'no next step'
+      Notifier.addInfo 'No next step'
 
   onPrevStep: ->
     step = @current.step
@@ -105,3 +107,4 @@ module.exports = ProjectStore = Reflux.createStore
       @onUpdateCurrent(prevChapterFinalStep, chapter - 1)
     else
       console.log 'no earlier step'
+      Notifier.addInfo 'No earlier step'
