@@ -1,30 +1,28 @@
-{$, $$$, ScrollView, TextEditorView} = require 'atom-space-pen-views'
+{ScrollView, TextEditorView} = require 'atom-space-pen-views'
 {CompositeDisposable, TextBuffer, TextEditor} = require 'atom'
-Reflux = require 'reflux'
 
-CodeHighlight = require './utils/code-highlight'
-ProjectActions = require './actions/project-actions'
-NavActions = require './actions/nav-actions'
-ProjectStore = require './stores/project-store'
+CodeHighlight = require '../utils/code-highlight'
+ProjectActions = require '../actions/project-actions'
+NavActions = require '../actions/nav-actions'
+ProjectStore = require '../stores/project-store'
 
 module.exports =
-class FormView extends ScrollView
-
-  # can load content
+class EditStepView extends ScrollView
   @content: () ->
 
+    # Text boxes
     @textABuffer = new TextBuffer
     @textBBuffer = new TextBuffer
-
     @textAEditor = new TextEditor
       buffer: @textABuffer
       placeholderText: 'Above text here'
-
     @textBEditor = new TextEditor
       buffer: @textBBuffer
       placeholderText: 'Below text here'
 
     @div class: 'tut', =>
+
+      # Header
       @div class: 'tut--header', =>
         @p =>
           @tag 'span', 'Tutorial Builder: '
@@ -36,16 +34,14 @@ class FormView extends ScrollView
           @tag 'span', '  Step: '
           @tag 'span', class: 'text-success tut--step', outlet: 'step'
 
+      # Text Inputs
       @div class: 'tut--text-box', =>
         @subview 'textAEditor', new TextEditorView(editor: @textAEditor)
-
-      # code-block
-      # TODO: move into TextEditorView, load dynamically, clickable
       @div class: 'tut--code-block', outlet: 'codeBlock'
-
       @div class: 'tut--text-box', =>
         @subview 'textBEditor', new TextEditorView(editor: @textBEditor)
 
+      # Events
       @div class: 'tut--options', =>
         @button class: 'btn btn-default', click: 'prevStep', 'Prev'
         @button class: 'btn btn-default', click: 'nextStep', 'Next'
@@ -54,25 +50,23 @@ class FormView extends ScrollView
         @button class: 'btn btn-default', click: 'addChapter', 'Add Chapter'
       @div class: 'tut--options', =>
         @button class: 'btn btn-primary', click: 'save', 'save'
-
-      @div class: 'tut-options', =>
-        @p 'testing'
-        @button class: 'btn btn-primary', click: 'checkoutOld', 'Old'
-        @button class: 'btn btn-primary', click: 'checkoutNew', 'New'
+      # @div class: 'tut-options', =>
+      #   @button class: 'btn btn-primary', click: 'checkoutOld', 'Old'
+      #   @button class: 'btn btn-primary', click: 'checkoutNew', 'New'
 
   ###
   #  Initialize
   ###
-
   initialize: () ->
     super
     @project = ProjectStore
-    @subscriptions = new CompositeDisposable
     @onUpdate()
-
     @project.listen () =>
       console.log 'change!'
       @onUpdate()
+
+    # Register key subscriptions
+    @subscriptions = new CompositeDisposable
 
   getCurrentStep: () ->
     console.log @project
@@ -101,7 +95,6 @@ class FormView extends ScrollView
   ###
   #  Navigation
   ###
-
   nextStep: ->
     @save()
     NavActions.nextStep()
@@ -111,9 +104,8 @@ class FormView extends ScrollView
     NavActions.prevStep()
 
   ###
-  #  Add
+  #  Steps / Chapters
   ###
-
   addStep: ->
     @save()
     ProjectActions.addStep()
@@ -125,9 +117,8 @@ class FormView extends ScrollView
   ###
   #  Git Tests
   ###
-
-  checkoutOld: ->
-    # repo = atom.project.getRepositories()[0]
+  # checkoutOld: ->
+    #
     # processDiffPatch = new Promise((resolve, reject) ->
     #   patch = gitDiff(repo)
     #   resolve patch
@@ -139,7 +130,9 @@ class FormView extends ScrollView
     #   alert patch
     #   codeBlock.render patch
 
-  checkoutNew: ->
-    console.log 'clicked';
+  # checkoutNew: ->
+    # console.log 'clicked';
+    # ProjectActions.updateCurrent(1, 0)
 
-    ProjectActions.updateCurrent(1, 0)
+  destroy: ->
+    #TODO: destroy

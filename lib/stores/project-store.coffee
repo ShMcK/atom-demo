@@ -1,7 +1,8 @@
 Reflux = require 'reflux'
 ProjectActions = require '../actions/project-actions'
 NavActions = require '../actions/nav-actions'
-# GitActions = require '../actions/git-actions'
+GitActions = require '../actions/git-actions'
+
 defaultStep =
   above: ''
   below: ''
@@ -18,9 +19,9 @@ module.exports = ProjectStore = Reflux.createStore
     @data =
       chapters: [
         steps: [
-          above: 'above'
-          below: 'below'
-          code: '@i = 0\n func: ->\n console.log "test"'
+          above: '# Text Above\nexample text here'
+          below: '# Text Below\nexample text here'
+          code: '@i = 0\nfunc = ->\n  console.log "test"'
         ]
       ]
 
@@ -70,11 +71,12 @@ module.exports = ProjectStore = Reflux.createStore
     @trigger @data.chapters[@current.chapter].steps[@current.step].code = code
 
     # Current Position
-  onUpdateCurrent: (step, chapter) ->
+  onUpdateCurrent: (step, chapter = @current.chapter) ->
     console.log 'onUpdateCurrent', step, chapter
     @trigger @current =
       step: step
-      chapter: chapter || @current.chapter
+      chapter: chapter
+    console.log 'new @current', @current
 
   onNextStep: ->
     step = @current.step
@@ -91,6 +93,7 @@ module.exports = ProjectStore = Reflux.createStore
   onPrevStep: ->
     step = @current.step
     chapter = @current.chapter
+    console.log 'onPrevStep', step, chapter
     if step > 0
       console.log 'prev step'
       @onUpdateCurrent(step - 1)

@@ -1,4 +1,6 @@
 Reflux = require 'reflux'
+# TODO: allow multiple repos
+repo = atom.project.getRepositories()[0]
 
 GitActions = Reflux.createActions([
   'diff'

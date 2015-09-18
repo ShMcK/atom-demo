@@ -1,18 +1,15 @@
-# TutView = require './tut-view'
-TutView = require './tut-view'
+EditStepView = require './views/edit-step-view'
 {CompositeDisposable} = require 'atom'
 
 module.exports = Tut =
-  # tutView: null
-  tutView: null
+  editStepView: null
   panel: null
   subscriptions: null
 
   activate: (state) ->
 
-
-    @tutView = new TutView() #state.tutViewState
-    @panel = atom.workspace.addRightPanel(item: @tutView, priority: 100)
+    @editStepView = new EditStepView() #state.tutViewState
+    @panel = atom.workspace.addRightPanel(item: @editStepView, priority: 100)
 
     # Events subscribed to in atom's system can be easily cleaned up with a CompositeDisposable
     @subscriptions = new CompositeDisposable
@@ -24,7 +21,7 @@ module.exports = Tut =
   deactivate: ->
     @panel.destroy()
     @subscriptions.dispose()
-    @tutView.destroy()
+    @editStepView.destroy()
 
   serialize: ->
     # tutViewState: @tutView.serialize()
@@ -35,5 +32,6 @@ module.exports = Tut =
     if @panel.isVisible()
       @panel.hide()
     else
-      #atom.commands.dispatch(atom.views.getView(atom.workspace), "git-plus:diff");
       @panel.show()
+
+# toggle other panels
