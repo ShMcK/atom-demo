@@ -6,3 +6,4 @@ module.exports = highlight = (code, fileType) ->
   return highlighter.highlightSync
     fileContents: code
     scopeName: 'source.' + fileType
+    classPrefix: 'Tut'

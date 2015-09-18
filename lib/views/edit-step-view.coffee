@@ -4,6 +4,7 @@
 CodeHighlight = require '../utils/code-highlight'
 ProjectActions = require '../actions/project-actions'
 NavActions = require '../actions/nav-actions'
+GitActions = require '../actions/git-actions'
 ProjectStore = require '../stores/project-store'
 
 module.exports =
@@ -50,9 +51,9 @@ class EditStepView extends ScrollView
         @button class: 'btn btn-default', click: 'addChapter', 'Add Chapter'
       @div class: 'tut--options', =>
         @button class: 'btn btn-primary', click: 'save', 'save'
-      # @div class: 'tut-options', =>
-      #   @button class: 'btn btn-primary', click: 'checkoutOld', 'Old'
-      #   @button class: 'btn btn-primary', click: 'checkoutNew', 'New'
+      @div class: 'tut-options', =>
+        @button class: 'btn btn-primary', click: 'test1', 'Test 1'
+        @button class: 'btn btn-primary', click: 'test2', 'Test 2'
 
   ###
   #  Initialize
@@ -84,7 +85,7 @@ class EditStepView extends ScrollView
     # Content
     @textAEditor.setText @currentStep.above
     @textBEditor.setText @currentStep.below
-    @codeBlock.html CodeHighlight(@currentStep.code, 'coffee')
+    @codeBlock.html CodeHighlight(@currentStep.code, @currentStep.fileType)
 
   save: ->
     text =
@@ -117,7 +118,8 @@ class EditStepView extends ScrollView
   ###
   #  Git Tests
   ###
-  # checkoutOld: ->
+  test1: ->
+    GitActions.diff()
     #
     # processDiffPatch = new Promise((resolve, reject) ->
     #   patch = gitDiff(repo)
@@ -130,7 +132,7 @@ class EditStepView extends ScrollView
     #   alert patch
     #   codeBlock.render patch
 
-  # checkoutNew: ->
+  test2: ->
     # console.log 'clicked';
     # ProjectActions.updateCurrent(1, 0)
 
