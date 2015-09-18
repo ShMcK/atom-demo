@@ -8,6 +8,10 @@
     {
       'label': 'Log'
       'command': 'tut:toggle-log'
+    },
+    {
+      'label': 'Info'
+      'command': 'tut:toggle-info'
     }
   ]
 'menu': [
@@ -23,7 +27,12 @@
         {
           'label': 'Log'
           'command': 'tut:toggle-log'
+        },
+        {
+          'label': 'Info'
+          'command': 'tut:toggle-info'
         }
+
       ]
     ]
   }

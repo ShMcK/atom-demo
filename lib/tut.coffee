@@ -1,5 +1,6 @@
 EditStepView = require './views/edit-step-view'
 StepLogView = require './views/step-log-view'
+InfoView = require './views/info-view'
 {CompositeDisposable} = require 'atom'
 
 module.exports = Tut =
@@ -8,6 +9,9 @@ module.exports = Tut =
 
   stepLogView: null
   logPanel: null
+
+  infoView: null
+  infoPanel: null
 
   subscriptions: null
 
@@ -18,6 +22,11 @@ module.exports = Tut =
 
     @stepLogView = new StepLogView()
     @logPanel = atom.workspace.addRightPanel(item: @stepLogView, priority: 150)
+    @logPanel.hide()
+
+    @infoView = new InfoView()
+    @infoPanel = atom.workspace.addRightPanel(item: @infoView, priority: 200)
+    @infoPanel.hide()
 
     # Events subscribed to in atom's system can be easily cleaned up with a CompositeDisposable
     @subscriptions = new CompositeDisposable
@@ -26,29 +35,26 @@ module.exports = Tut =
     @subscriptions.add atom.commands.add 'atom-workspace', 'tut:toggle': =>
       @toggle()
     @subscriptions.add atom.commands.add 'atom-workspace', 'tut:toggle-log': =>
-      @toggleLog()
+      @toggle(@logPanel)
+    @subscriptions.add atom.commands.add 'atom-workspace', 'tut:toggle-info': =>
+      @toggle(@infoPanel)
 
   deactivate: ->
     @panel.destroy()
+    @logPanel.destroy()
+    @infoPanel.destroy()
     @subscriptions.dispose()
     @editStepView.destroy()
+    @stepLogView.destroy()
+    @infoView.destroy()
 
   serialize: ->
     # tutViewState: @tutView.serialize()
 
-  toggle: ->
-    console.log 'Tut was toggled!'
+  toggle: (panel = @panel)->
+    console.log panel + ' was toggled!'
 
-    if @panel.isVisible()
-      @panel.hide()
+    if panel.isVisible()
+      panel.hide()
     else
-      @panel.show()
-
-# toggle other panels
-  toggleLog: ->
-    console.log 'Log was toggled'
-
-    if @logPanel.isVisible()
-      @logPanel.hide()
-    else
-      @logPanel.show()
+      panel.show()

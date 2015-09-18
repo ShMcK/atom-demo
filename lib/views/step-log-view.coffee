@@ -1,5 +1,6 @@
 {ScrollView} = require 'atom-space-pen-views'
-# list of commits sorted by chapter/step
+ProjectStore = require '../stores/project-store'
+
 # title, code
 module.exports =
 class StepLogView extends ScrollView
@@ -14,7 +15,12 @@ class StepLogView extends ScrollView
       @div class: 'tut--log', =>
         @p 'STEP LOG VIEW'
 
-      # Loop over Chapters
-      #   Loop over Steps
+      # Loop over Chapters // title
+      #   Loop over Steps // message
+
   initialize: ->
     super
+
+  toggleChapter: (index) ->
+
+  toggleStep: (index) ->
