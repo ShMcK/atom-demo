@@ -24,7 +24,7 @@ class EditStepView extends ScrollView
     @div class: 'tut', =>
 
       # Header
-      @div class: 'tut--header', =>
+      @div class: 'tut--header', click: 'toggleInfo', =>
         @p =>
           @tag 'span', 'Tutorial Builder: '
           @tag 'span', class: 'text-success', outlet: 'title'
@@ -115,22 +115,15 @@ class EditStepView extends ScrollView
     @save()
     ProjectActions.addChapter()
 
+
+  toggleInfo: ->
+
+
   ###
   #  Git Tests
   ###
   test1: ->
     GitActions.diff()
-    #
-    # processDiffPatch = new Promise((resolve, reject) ->
-    #   patch = gitDiff(repo)
-    #   resolve patch
-    #   reject Error 'error processing diff patch'
-    #   return
-    # )
-    # processDiffPatch.then (patch) ->
-    #   console.log 'patch', patch
-    #   alert patch
-    #   codeBlock.render patch
 
   test2: ->
     # console.log 'clicked';

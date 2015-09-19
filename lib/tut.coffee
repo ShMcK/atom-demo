@@ -21,12 +21,10 @@ module.exports = Tut =
     @panel = atom.workspace.addRightPanel(item: @editStepView, priority: 100)
 
     @stepLogView = new StepLogView()
-    @logPanel = atom.workspace.addRightPanel(item: @stepLogView, priority: 150)
-    @logPanel.hide()
+    @logPanel = atom.workspace.addRightPanel(item: @stepLogView, priority: 150, visible: false)
 
     @infoView = new InfoView()
-    @infoPanel = atom.workspace.addRightPanel(item: @infoView, priority: 200)
-    @infoPanel.hide()
+    @infoPanel = atom.workspace.addRightPanel(item: @infoView, priority: 200, visible: false)
 
     # Events subscribed to in atom's system can be easily cleaned up with a CompositeDisposable
     @subscriptions = new CompositeDisposable
