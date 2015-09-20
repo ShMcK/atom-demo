@@ -22,7 +22,7 @@
   "lists": [
     {
       "name": "TODO",
-      "hidden": false
+      "hidden": true
     }
   ],
   "marked": {

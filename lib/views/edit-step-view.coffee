@@ -10,7 +10,6 @@ ProjectStore = require '../stores/project-store'
 module.exports =
 class EditStepView extends ScrollView
   @content: () ->
-
     # Text boxes
     @textABuffer = new TextBuffer
     @textBBuffer = new TextBuffer
@@ -126,6 +125,7 @@ class EditStepView extends ScrollView
     GitActions.diff()
 
   test2: ->
+    GitActions.checkout('213a8c2')
     # console.log 'clicked';
     # ProjectActions.updateCurrent(1, 0)
 
