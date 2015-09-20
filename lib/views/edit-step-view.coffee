@@ -8,8 +8,16 @@ NavActions = require '../actions/nav-actions'
 GitActions = require '../actions/git-actions'
 ProjectStore = require '../stores/project-store'
 
+LogView = require './log-view'
+InfoView = require './info-view'
+
 module.exports =
 class EditStepView extends ScrollView
+  stepLogView: null
+  logPanel: null
+  infoView: null
+  infoPanel: null
+
   @content: () ->
     # Text boxes
     @textABuffer = new TextBuffer
@@ -28,7 +36,7 @@ class EditStepView extends ScrollView
         @p =>
           @tag 'span', 'Tutorial Builder: '
           @tag 'span', class: 'text-success', outlet: 'title'
-      @div class: 'tut--current', =>
+      @div class: 'tut--current', click: 'toggleStepLog', =>
         @p =>
           @tag 'span', 'Ch: '
           @tag 'span', class: 'text-success tut--chapter', outlet: 'chapter'
@@ -67,8 +75,18 @@ class EditStepView extends ScrollView
       console.log 'change!'
       @onUpdate()
 
+    @LogView = new LogView()
+    @logPanel = atom.workspace.addRightPanel(item: @LogView, priority: 150, visible: false)
+
+    @infoView = new InfoView()
+    @infoPanel = atom.workspace.addModalPanel(item: @infoView, priority: 200, visible: false)
+
     # Register key subscriptions
     @subscriptions = new CompositeDisposable
+    @subscriptions.add atom.commands.add 'atom-workspace', 'tut:toggle-log': =>
+      @toggle(@logPanel)
+    @subscriptions.add atom.commands.add 'atom-workspace', 'tut:toggle-info': =>
+      @toggle(@infoPanel)
 
   getCurrentStep: () ->
     console.log @project
@@ -86,8 +104,7 @@ class EditStepView extends ScrollView
     # Content
     @textAEditor.setText @currentStep.above
     @textBEditor.setText @currentStep.below
-    codeBlock = Highlight (FormatCode @currentStep.code), @currentStep.fileType
-    @codeBlock.html codeBlock
+    @codeBlock.html Highlight (FormatCode @currentStep.code), @currentStep.fileType
 
   save: ->
     text =
@@ -119,7 +136,16 @@ class EditStepView extends ScrollView
 
 
   toggleInfo: ->
+    @toggle @infoPanel
 
+  toggleStepLog: ->
+    @toggle @logPanel
+
+  toggle: (panel) ->
+    if panel.isVisible()
+      panel.hide()
+    else
+      panel.show()
 
   ###
   #  Git Tests
@@ -136,4 +162,12 @@ class EditStepView extends ScrollView
     GitActions.log()
 
   destroy: ->
-    #TODO: destroy
+    @subscriptions.dispose()
+    @infoPanel.destroy()
+    @logPanel.destroy()
+    StepLogView.destroy()
+    InfoView.destroy()
+    @textABuffer.destroy()
+    @textAEditor.destroy()
+    @textBBuffer.destroy()
+    @textBEditor.destroy()

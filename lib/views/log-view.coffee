@@ -3,8 +3,8 @@ ProjectStore = require '../stores/project-store'
 
 # title, code
 module.exports =
-class StepLogView extends ScrollView
-  @content: () ->
+class LogView extends ScrollView
+  @content: (project) ->
     @div class: 'tut', =>
 
       # Header
@@ -15,11 +15,9 @@ class StepLogView extends ScrollView
       @div class: 'tut--log', =>
         @p 'STEP LOG VIEW'
 
+      # console.log 'chapters', project.chapters.length
       # Loop over Chapters // title
       #   Loop over Steps // message
-
-  initialize: ->
-    super
 
   toggleChapter: (index) ->
 

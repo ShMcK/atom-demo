@@ -24,6 +24,9 @@ class InfoView extends ScrollView
         @div class: 'tut--code-block', outlet: 'codeBlock'
         @div class: 'tut--text-box', =>
           @subview 'descriptionInput', new TextEditorView(editor: @description)
+      @div class: 'tut-options', =>
+        @button class: 'btn btn-primary', click: 'update', 'Update'
+        @button class: 'btn btn-warning', click: 'cancel', 'Cancel'
 
 
       # title
@@ -32,3 +35,9 @@ class InfoView extends ScrollView
 
   initialize: ->
     super
+
+  update: ->
+    console.log 'update'
+
+  cancel: ->
+    console.log 'cancel'
