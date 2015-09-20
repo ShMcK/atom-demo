@@ -6,4 +6,7 @@ module.exports = highlight = (code, fileType) ->
   return highlighter.highlightSync
     fileContents: code
     scopeName: 'source.' + fileType
-    classPrefix: 'Tut'
+    classPrefix: 'tut'
+
+module.exports = diffFormat = (code) ->
+  console.log code

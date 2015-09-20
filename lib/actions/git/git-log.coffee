@@ -7,7 +7,6 @@ gitLog = (hash) ->
   logs = ''
   args = ['log', '--pretty=format:%h']
   args.push hash if hash
-  console.log args
   Git.cmd
     args: args
     cwd: repo.getWorkingDirectory()

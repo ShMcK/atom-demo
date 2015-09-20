@@ -34,31 +34,34 @@ gitDiff = (repo, {diffStat, file}={}) ->
 
 processDiff = (text) ->
   if text?.length > 0
-    formattedPatch = formatDiff(text).split('\n').map (item) ->
-      labelChange(item)
-    console.log formattedPatch
-    return formattedPatch
+    return _prettifyDiff(text)
   else
     Notifier.addInfo 'Nothing to show.'
     return null
 
 # get patch only
-formatDiff = (text) ->
-  diffStatMatch = new RegExp(/^@@ (.+?(?= @@))/m)
-  diffStat = text.match(diffStatMatch)[0].slice(3)
-  start = text.indexOf('@@ ' + diffStat + ' @@') + diffStat.length + 6
-  patch = text.slice(start)
-  return patch
+# formatDiff = (text) ->
+#   diffStatMatch = new RegExp(/^@@ (.+?(?= @@))/m)
+#   diffStat = text.match(diffStatMatch)[0].slice(3)
+#   start = text.indexOf('@@ ' + diffStat + ' @@') + diffStat.length + 6
+#   patch = text.slice(start)
+#   return patch
+
+_prettifyDiff = (data) ->
+  data = data.split(/^@@(?=[ \-\+\,0-9]*@@)/gm)
+  data[1..data.length] = ('@@' + line for line in data[1..])
+  data.unshift()
+  return data
 
 # break patch into { line: String, changes: '+/-' }
-labelChange = (line) ->
-  labelled = null
-  firstChar = line.charAt(0)
-  if firstChar is "+" or firstChar is "-"
-    return labelled =
-      line: line.slice(1).trim()
-      change: firstChar
-  return labelled = line: line.trim()
+# labelChange = (line) ->
+#   labelled = null
+#   firstChar = line.charAt(0)
+#   if firstChar is "+" or firstChar is "-"
+#     return labelled =
+#       line: line.slice(1).trim()
+#       change: firstChar
+#   return labelled = line: line.trim()
 
 filterDiff = (diffs) ->
   code = ''

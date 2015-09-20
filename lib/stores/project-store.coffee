@@ -20,6 +20,7 @@ module.exports = ProjectStore = Reflux.createStore
     @data =
       chapters: [
         steps: [
+          hash: ''
           above: '# Text Above\nexample text here'
           below: '# Text Below\nexample text here'
           code: '@i = 0\nfunc = ->\n  console.log "test"'

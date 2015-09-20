@@ -41,12 +41,6 @@ gitCmd = ({args, cwd, options, stdout, stderr, exit}={}) ->
   catch error
     notifier.addError 'Tut is unable to locate git command. Please ensure process.env.PATH can access git.'
 
-gitStatus = (repo, stdout) ->
-  gitCmd
-    args: ['status', '--porcelain', '-z']
-    cwd: repo.getWorkingDirectory()
-    stdout: (data) -> stdout(if data.length > 2 then data.split('\0') else [])
-
 gitStagedFiles = (repo, stdout) ->
   files = []
   gitCmd
