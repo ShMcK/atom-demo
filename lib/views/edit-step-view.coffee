@@ -1,7 +1,8 @@
 {ScrollView, TextEditorView} = require 'atom-space-pen-views'
 {CompositeDisposable, TextBuffer, TextEditor} = require 'atom'
 
-CodeHighlight = require '../utils/code-highlight'
+Highlight = require '../utils/highlight'
+FormatCode = require '../utils/format-code'
 ProjectActions = require '../actions/project-actions'
 NavActions = require '../actions/nav-actions'
 GitActions = require '../actions/git-actions'
@@ -85,7 +86,8 @@ class EditStepView extends ScrollView
     # Content
     @textAEditor.setText @currentStep.above
     @textBEditor.setText @currentStep.below
-    @codeBlock.html CodeHighlight(@currentStep.code, @currentStep.fileType)
+    codeBlock = Highlight (FormatCode @currentStep.code), @currentStep.fileType
+    @codeBlock.html codeBlock
 
   save: ->
     text =

@@ -9,32 +9,29 @@ Git = require './git'
 Notifier = require '../../utils/notifier'
 ProjectActions = require '../project-actions'
 
-gitDiff = (repo, {diffStat, file}={}) ->
-  diffFilePath = Path.join(repo.getPath(), "tut.diff")
+gitDiff = (repo, {diff, file}={}) ->
+  # diffFilePath = Path.join(repo.getPath(), "tut.diff")
   file ?= repo.relativize(atom.workspace.getActiveTextEditor()?.getPath())
   if not file
     return Notifier.addError "No open file. Select 'Diff All'."
   console.log 'file', file
   console.log file.match(/\.[0-9a-z]+$/i)[0].slice(1)
-  diffStat ?= ''
+  diff ?= ''
   args = ['diff', '--color=never']
-  args.push file if diffStat is ''
+  args.push file if diff is ''
   Git.cmd
     args: args
     cwd: repo.getWorkingDirectory()
     stdout: (data) ->
-      diffStat += data
+      diff += data
     exit: (code) ->
       if code is 0
         # target
-        diff = processDiff diffStat
-        console.log 'diff', diff
-        if diff
-          ProjectActions.updateCodeBlock filterDiff(diff)
+        diff = processDiff diff
 
 processDiff = (text) ->
   if text?.length > 0
-    return _prettifyDiff(text)
+    ProjectActions.updateCodeBlock _prettifyDiff(text)
   else
     Notifier.addInfo 'Nothing to show.'
     return null
@@ -63,11 +60,11 @@ _prettifyDiff = (data) ->
 #       change: firstChar
 #   return labelled = line: line.trim()
 
-filterDiff = (diffs) ->
-  code = ''
-  diffs.forEach (diff) ->
-    if diff.change is '+'
-      code += diff.line + '\n'
-  return code
+# filterDiff = (diffs) ->
+#   code = ''
+#   diffs.forEach (diff) ->
+#     if diff.change is '+'
+#       code += diff.line + '\n'
+#   return code
 
 module.exports = gitDiff

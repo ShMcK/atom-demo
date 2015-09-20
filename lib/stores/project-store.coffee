@@ -23,7 +23,7 @@ module.exports = ProjectStore = Reflux.createStore
           hash: ''
           above: '# Text Above\nexample text here'
           below: '# Text Below\nexample text here'
-          code: '@i = 0\nfunc = ->\n  console.log "test"'
+          code: '+@i = 0\n+func = ->\n+  console.log "test"'
           fileType: 'coffee'
         ]
       ]

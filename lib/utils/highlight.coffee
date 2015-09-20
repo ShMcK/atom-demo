@@ -2,11 +2,9 @@
 Highlights = require 'highlights'
 highlighter = new Highlights()
 
-module.exports = highlight = (code, fileType) ->
+module.exports = Highlight = (code, fileType) ->
+  console.log code
   return highlighter.highlightSync
     fileContents: code
     scopeName: 'source.' + fileType
     classPrefix: 'tut'
-
-module.exports = diffFormat = (code) ->
-  console.log code
