@@ -3,15 +3,19 @@ repo = atom.project.getRepositories()[0]
 Git = require './git'
 Notifier = require '../../utils/notifier'
 
-gitCheckout = (hash) ->
-  args = ['checkout']
-  args.push hash if hash.length
+gitLog = (hash) ->
+  logs = ''
+  args = ['log', '--pretty=format:%h']
+  args.push hash if hash
   console.log args
   Git.cmd
     args: args
     cwd: repo.getWorkingDirectory()
+    stdout: (data) ->
+      logs += data
     exit: (code) ->
       if code is 0
-        console.log 'checkout failed: ', code
+        logs = logs.split('\n')
+        console.log logs
 
-module.exports = gitCheckout
+module.exports = gitLog

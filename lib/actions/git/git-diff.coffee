@@ -9,7 +9,6 @@ Git = require './git'
 Notifier = require '../../utils/notifier'
 ProjectActions = require '../project-actions'
 
-
 gitDiff = (repo, {diffStat, file}={}) ->
   diffFilePath = Path.join(repo.getPath(), "tut.diff")
   file ?= repo.relativize(atom.workspace.getActiveTextEditor()?.getPath())

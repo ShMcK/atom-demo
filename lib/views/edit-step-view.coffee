@@ -51,8 +51,9 @@ class EditStepView extends ScrollView
       @div class: 'tut--options', =>
         @button class: 'btn btn-primary', click: 'save', 'save'
       @div class: 'tut-options', =>
-        @button class: 'btn btn-primary', click: 'test1', 'Test 1'
-        @button class: 'btn btn-primary', click: 'test2', 'Test 2'
+        @button class: 'btn btn-primary', click: 'diff', 'Diff'
+        @button class: 'btn btn-primary', click: 'checkout', 'Checkout'
+        @button class: 'btn btn-primary', click: 'log', 'Log'
 
   ###
   #  Initialize
@@ -121,13 +122,16 @@ class EditStepView extends ScrollView
   ###
   #  Git Tests
   ###
-  test1: ->
+  diff: ->
     GitActions.diff()
 
-  test2: ->
+  checkout: ->
     GitActions.checkout('213a8c2')
     # console.log 'clicked';
     # ProjectActions.updateCurrent(1, 0)
+    #
+  log: ->
+    GitActions.log()
 
   destroy: ->
     #TODO: destroy
